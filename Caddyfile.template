@@ -1,0 +1,17 @@
+example.com {
+    handle /fhir/* {
+        reverse_proxy 127.0.0.1:5001
+    }
+    handle /ehrbase/* {
+        reverse_proxy 127.0.0.1:5002
+    }
+    handle {
+        reverse_proxy 127.0.0.1:8080
+    }
+    header /* {
+        ?Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "OPTIONS, GET, PUT, POST, DELETE"
+        Access-Control-Allow-Headers "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, X-CSRF-Token, Cache-Control"
+        Access-Control-Expose-Headers Authorization
+    }
+}
