@@ -5,6 +5,7 @@
   import New from "./components/newPatient.svelte";
   import Home from "./components/Home.svelte";
   import Delete from "./components/deleteEHR.svelte";
+  import Add from "./components/alreadyPost.svelte";
   import { Router, Link, Route } from "svelte-navigator";
 </script>
 
@@ -34,7 +35,11 @@
       <Delete />
     </Route>
 
-    <Route path="/">
+    <Route path="/add-compositions">
+      <Add />
+    </Route>
+
+    <Route>
       <Home />
     </Route>
   </main>

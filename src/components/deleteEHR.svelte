@@ -1,18 +1,20 @@
 <script>
   import axios from "axios";
+  let number;
+  const handleSubmit = async () => {
+    console.log(number);
+    try {
+      const resp = await axios.delete(
+        `http://localhost:3000/delete?AdhaarNo=${number}`
+      );
 
-  const handleSubmit = async (e) => {
-    const target = new FormData(e.target);
-    let submit = {};
-
-    for (const [i, j] of target.entries()) {
-      submit[i] = j;
+      if (resp.status == 200) {
+        alert("Patient Data Deleted");
+        number = null;
+      }
+    } catch (e) {
+      console.log(e);
     }
-
-    // try{
-    //     const resp = await axios.delete()
-
-    // }
   };
 </script>
 
@@ -22,7 +24,7 @@
   </h1>
 
   <form
-    class="shadow-lg rounded-lg border flex flex-col p-5 items-center"
+    class="rounded-lg border flex flex-col p-5 items-center"
     on:submit|preventDefault={handleSubmit}
   >
     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -33,10 +35,17 @@
         Adhaar ID of the Patient
       </label>
       <input
+        bind:value={number}
         class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         placeholder="XXXX XXXX XXXX"
         name="ahrno"
       />
     </div>
+    <button
+      class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded mt-5"
+      type="submit"
+    >
+      Submit
+    </button>
   </form>
 </div>
