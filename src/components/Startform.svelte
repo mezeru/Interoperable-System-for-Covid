@@ -26,7 +26,7 @@
 </script>
 
 <mb-form
-  transition:fade={{ duration: 2000 }}
+  transition:fade={{ duration: 500 }}
   class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
   ref="formRef"
   on:mb-submit={handleSubmit}

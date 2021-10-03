@@ -2,13 +2,6 @@ import { openehr } from "./service";
 
 export const formatAql = (aqlResultData): any => {
   const { columns, rows } = aqlResultData;
-  // const data = rows.map((row) => {
-  //   return new Map(
-  //     row.map((item, i) => {
-  //       return [columns[i].name,item];
-  //     })
-  //   );
-  // });
   return { columns, rows };
 
 
