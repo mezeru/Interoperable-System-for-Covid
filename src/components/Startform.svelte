@@ -1,6 +1,6 @@
 <script>
   import axios from "axios";
-
+  import { fade } from "svelte/transition";
   export let ehrId;
   console.log(ehrId);
   const templateId = "Covid.form.v1";
@@ -26,10 +26,14 @@
 </script>
 
 <mb-form
+  transition:fade={{ duration: 2000 }}
   class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
   ref="formRef"
   on:mb-submit={handleSubmit}
 >
+  <mb-context path="covid.form.v1/context/start_time" />
+  <mb-context path="covid.form.v1/context/setting" />
+
   <sl-tab-group bind:this={navigate}>
     <sl-tab slot="nav" panel="clinical">OPD</sl-tab>
     <sl-tab slot="nav" panel="lab">Labrotary Tests</sl-tab>
