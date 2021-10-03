@@ -4,4 +4,6 @@
 
 h1,h2{
     text-align: center;
+    color: #0066ff;
+    text-shadow: 0 0 4px #ffffff, 0 0 5px #4000bfa1;
 }

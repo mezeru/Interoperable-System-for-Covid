@@ -1,6 +1,7 @@
 <script>
   export let display;
   export let ehrId;
+  export let baseURL;
   import axios from "axios";
   const handleSubmitDemo = async (e) => {
     const target = new FormData(e.target);
@@ -46,7 +47,7 @@
         console.log(ehrId);
 
         try {
-          const resp = await axios.post("http://localhost:3000/new", patient);
+          const resp = await axios.post(`${baseURL}new`, patient);
 
           if (resp.status == 200) {
             display = 1;

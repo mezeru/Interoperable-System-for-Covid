@@ -24,7 +24,7 @@
   </h1>
 
   <form
-    class="rounded-lg border flex flex-col p-5 items-center"
+    class="flex flex-col p-5 items-center"
     on:submit|preventDefault={handleSubmit}
   >
     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">

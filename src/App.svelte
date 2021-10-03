@@ -6,7 +6,9 @@
   import Home from "./components/Home.svelte";
   import Delete from "./components/deleteEHR.svelte";
   import Add from "./components/alreadyPost.svelte";
+  import Get from "./components/GetData.svelte";
   import { Router, Link, Route } from "svelte-navigator";
+  let baseURL = "http://localhost:3000/";
 </script>
 
 <Router>
@@ -26,17 +28,19 @@
 
   <main class="p-2 md:p-12 flex flex-col gap-5">
     <Route path="/new">
-      <New />
+      <New {baseURL} />
     </Route>
 
-    <Route path="/get" />
+    <Route path="/get">
+      <Get {baseURL} />
+    </Route>
 
     <Route path="/delete">
       <Delete />
     </Route>
 
     <Route path="/add-compositions">
-      <Add />
+      <Add {baseURL} />
     </Route>
 
     <Route>
