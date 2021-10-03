@@ -8,6 +8,7 @@
   import Add from "./components/alreadyPost.svelte";
   import Get from "./components/GetData.svelte";
   import { Router, Link, Route } from "svelte-navigator";
+  import Patient from "./components/getPatient.svelte";
   let baseURL = "http://localhost:3000/";
 </script>
 
@@ -41,6 +42,10 @@
 
     <Route path="/add-compositions">
       <Add {baseURL} />
+    </Route>
+
+    <Route path="/patient/:ehrId">
+      <Patient />
     </Route>
 
     <Route>

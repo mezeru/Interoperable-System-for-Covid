@@ -27,6 +27,7 @@
     "axios": "^0.21.1",
     "medblocks-ui": "^0.0.53",
     "sass": "^1.39.0",
-    "svelte-hmr": "^0.14.7"
+    "svelte-hmr": "^0.14.7",
+    "svelte-routing": "^1.6.0"
   }
 }
