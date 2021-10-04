@@ -2,6 +2,9 @@
   import axios from "axios";
   import { fade } from "svelte/transition";
   export let ehrId;
+  if (!ehrId) {
+    ehrId = window.location.pathname.split("/")[2];
+  }
   console.log(ehrId);
   const templateId = "Covid.form.v1";
   let navigate;
@@ -25,8 +28,9 @@
   };
 </script>
 
+<h2 class="font-sans text-6xl font-bold">Enter Details</h2>
 <mb-form
-  transition:fade={{ duration: 500 }}
+  transition:fade={{ duration: 1000 }}
   class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
   ref="formRef"
   on:mb-submit={handleSubmit}

@@ -3,11 +3,10 @@
   import Demo from "./newform.svelte";
   export let baseURL;
   let display = 0;
-  let ehrId = 0;
+  let ehrId = null;
 </script>
 
 {#if display == 1}
-  <h2 class="font-sans text-6xl font-bold">Enter Details</h2>
   <Details {ehrId} />
 {/if}
 

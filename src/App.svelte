@@ -8,6 +8,7 @@
   import Add from "./components/alreadyPost.svelte";
   import Get from "./components/GetData.svelte";
   import { Router, Link, Route } from "svelte-navigator";
+  import CompoForm from "./components/Startform.svelte";
   import Patient from "./components/getPatient.svelte";
   let baseURL = "http://localhost:3000/";
 </script>
@@ -46,6 +47,10 @@
 
     <Route path="/patient/:ehrId">
       <Patient />
+    </Route>
+
+    <Route path="/post-data/:ehrId">
+      <CompoForm ehrId={null} />
     </Route>
 
     <Route>
