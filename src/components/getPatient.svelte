@@ -83,38 +83,54 @@
           {temp.rows[0][1].value == "YES" ? "Admitted" : "Not Admitted"}
         </p>
       </div>
-
-      <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
-        <h3 class="text-3xl font-bold">Clinical Background</h3>
+      <h3 class="text-3xl font-bold">Clinical Background</h3>
+      <div class="grid grid-cols-2 gap-3 p-5 shadow-lg rounded-lg border">
         <div class="flex flex-col gap-3 p-5 rounded-lg border justify-around">
           <p class="text-center">
             <span class="font-bold">Symptoms</span>
             <span
               class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                .rows[0][6].value == 'Present'
+                .rows[0][6] != null
                 ? 'bg-red-500'
-                : 'bg-green-500'}">{temp.rows[0][6].value}</span
+                : 'bg-green-500'}"
+              >{temp.rows[0][6] != null ? temp.rows[0][6].value : "N/A"}</span
             >
           </p>
           <div class="flex flex-row gap-3 p-5 justify-evenly">
             <p>
               <span class="font-bold">Screening Purpose</span> :
-              <span>{temp.rows[0][7].value}</span>
+              <span
+                >{temp.rows[0][7] != null ? temp.rows[0][7].value : "N/A"}</span
+              >
             </p>
             <p>
               <span class="font-bold">Symptom Detail</span> :
-              <span>{temp.rows[0][8].items[0].value.value}</span>
+              <span
+                >{temp.rows[0][8] != null
+                  ? temp.rows[0][8].items[0].value.value
+                  : "N/A"}</span
+              >
             </p>
           </div>
         </div>
-        <div class="flex flex-row gap-3 p-5 rounded-lg border justify-around">
+        <div
+          class="flex flex-row gap-3 p-5 rounded-lg border justify-around items-center"
+        >
           <p>
             <span class="font-bold">Present Conditions</span> :
-            <span>{temp.rows[0][9]}</span>
+            <span
+              >{temp.rows[0][9]?.value != null
+                ? temp.rows[0][9].value
+                : "N/A"}</span
+            >
           </p>
           <p>
             <span class="font-bold">Specific Condition</span> :
-            <span>{temp.rows[0][10].items[0].value.value}</span>
+            <span
+              >{temp.rows[0][10] != null
+                ? temp.rows[0][10].items[0].value.value
+                : "N/A"}</span
+            >
           </p>
         </div>
       </div>
@@ -127,11 +143,15 @@
               {#each temp.columns as key, i}
                 {#if table.has(key.name)}
                   <tr>
-                    <td>
+                    <td class="font-bold">
                       {key.name.split("_").join(" ")}
                     </td>
                     {#each temp.rows as row}
-                      <td>
+                      <td
+                        class={key.name == "Time"
+                          ? "font-bold text-center"
+                          : "text-center"}
+                      >
                         {handleName(row[i], key.name)}
                       </td>
                     {/each}
@@ -145,11 +165,36 @@
 
       <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
         <h3 class="font-bold text-3xl">Recent Travelling</h3>
-        <div class="flex flex-col gap-3 p-5 rounded-lg border">
-          <p>
-            <span class="font-bold">Travel Detail</span> :
-            <span>{temp.rows[0][9]}</span>
+        <div class="grid grid-cols-2 gap-3 p-5 rounded-lg border">
+          <p class="text-center">
+            <span class="font-bold">Travelled Recently ? </span> :
+            <span
+              class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
+                .rows[0][11] != 'Yes'
+                ? 'bg-red-500'
+                : 'bg-green-500'}"
+            >
+              {temp.rows[0][11] != null ? temp.rows[0][11].value : "N/A"}
+            </span>
           </p>
+
+          <p class="text-center">
+            <span class="font-bold">Where ?</span> :
+            <span
+              class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
+                .rows[0][12] != null
+                ? 'bg-yellow-500'
+                : 'bg-green-500'}"
+              >{temp.rows[0][12] != null ? temp.rows[0][12].value : "N/A"}</span
+            >
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
+        <h3 class="font-bold text-3xl">Laboratory Tests</h3>
+        <div>
+          <!-- each lab result -->
         </div>
       </div>
     </div>
