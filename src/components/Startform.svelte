@@ -40,7 +40,7 @@
 
   <sl-tab-group bind:this={navigate}>
     <sl-tab slot="nav" panel="clinical">OPD</sl-tab>
-    <sl-tab slot="nav" panel="lab">Labrotary Tests</sl-tab>
+    <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
     <sl-tab slot="nav" panel="assess">Assessment</sl-tab>
     <sl-tab slot="nav" panel="Conclu">Conclusions</sl-tab>
 
@@ -71,10 +71,8 @@
         />
         <mb-duration
           year
-          month
-          hour
           path="covid.form.v1/clinical_background/age/chronological_age"
-          label="Chronological age"
+          label="Age"
         />
         <mb-context path="covid.form.v1/clinical_background/age/time" />
         <mb-context path="covid.form.v1/clinical_background/age/language" />
@@ -319,6 +317,7 @@
           path="covid.form.v1/clinical_background/lab_testing/laboratory_test_result/any_event:0/conclusion"
           label="Conclusion"
         />
+
         <mb-input
           path="covid.form.v1/clinical_background/lab_testing/laboratory_test_result/any_event:0/test_diagnosis:0"
           label="Test diagnosis"

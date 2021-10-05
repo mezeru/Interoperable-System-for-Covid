@@ -1,6 +1,6 @@
 <script lang="ts">
-  import "@shoelace-style/shoelace/dist/shoelace";
   import "medblocks-ui/dist/medblocks";
+  import "medblocks-ui/dist/shoelace";
   import "./style.css";
   import New from "./components/newPatient.svelte";
   import Home from "./components/Home.svelte";

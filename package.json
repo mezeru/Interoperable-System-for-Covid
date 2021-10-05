@@ -12,6 +12,7 @@
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
     "@tsconfig/svelte": "^2.0.1",
     "autoprefixer": "^9.8.6",
+    "medblocks-ui": "^0.0.69",
     "postcss": "^7.0.36",
     "svelte": "^3.37.0",
     "svelte-check": "^2.1.0",
@@ -25,7 +26,6 @@
   "dependencies": {
     "@shoelace-style/shoelace": "^2.0.0-beta.51",
     "axios": "^0.21.1",
-    "medblocks-ui": "^0.0.53",
     "sass": "^1.39.0",
     "svelte-hmr": "^0.14.7",
     "svelte-routing": "^1.6.0"

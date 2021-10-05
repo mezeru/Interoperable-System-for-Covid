@@ -1,14 +1,13 @@
 <script lang="ts">
-  import "@shoelace-style/shoelace/dist/components/format-date/format-date";
-  import "@shoelace-style/shoelace/dist/components/skeleton/skeleton";
+  import { allCompositions } from "../aql";
+  import { each, text } from "svelte/internal";
+  import { useNavigate } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import axios from "axios";
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
-  import { allCompositions } from "../aql";
-  import { each, text } from "svelte/internal";
-  import { useNavigate } from "svelte-navigator";
+  let navigateGrp;
   const navigate = useNavigate();
   let ehrId = window.location.pathname.split("/")[2];
   let searchParams = new URLSearchParams(window.location.search);
@@ -94,149 +93,170 @@
             {temp.rows[0][1].value == "YES" ? "Admitted" : "Not Admitted"}
           </p>
         </div>
-        <h3 class="text-3xl font-bold">Clinical Background</h3>
-        <div class="grid grid-cols-2 gap-3 p-5 shadow-lg rounded-lg border">
-          <div class="flex flex-col gap-3 p-5 rounded-lg border justify-around">
-            <p class="text-center">
-              <span class="font-bold">Symptoms</span>
-              <span
-                class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                  .rows[0][6] != null
-                  ? 'bg-red-500'
-                  : 'bg-green-500'}"
-                >{temp.rows[0][6] != null ? temp.rows[0][6].value : "N/A"}</span
-              >
-            </p>
-            <div class="flex flex-row gap-3 p-5 justify-evenly">
-              <p>
-                <span class="font-bold">Screening Purpose</span> :
-                <span
-                  >{temp.rows[0][7] != null
-                    ? temp.rows[0][7].value
-                    : "N/A"}</span
-                >
-              </p>
-              <p>
-                <span class="font-bold">Symptom Detail</span> :
-                <span
-                  >{temp.rows[0][8] != null
-                    ? temp.rows[0][8].items[0].value.value
-                    : "N/A"}</span
-                >
-              </p>
-            </div>
-          </div>
-          <div
-            class="flex flex-row gap-3 p-5 rounded-lg border justify-around items-center"
-          >
-            <p>
-              <span class="font-bold">Present Conditions</span> :
-              <span
-                >{temp.rows[0][9]?.value != null
-                  ? temp.rows[0][9].value
-                  : "N/A"}</span
-              >
-            </p>
-            <p>
-              <span class="font-bold">Specific Condition</span> :
-              <span
-                >{temp.rows[0][10] != null
-                  ? temp.rows[0][10].items[0].value.value
-                  : "N/A"}</span
-              >
-            </p>
-          </div>
-        </div>
+        <sl-tab-group bind:this={navigateGrp}>
+          <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
+          <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
+          <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
+          <sl-tab slot="nav" panel="lab">Lab Tests</sl-tab>
 
-        <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
-          <h3 class="text-3xl font-bold">Vital Signs</h3>
-          <div class="flex flex-col gap-3 p-5 rounded-lg border">
-            <table>
-              <tbody>
-                {#each temp.columns as key, i}
-                  {#if table.has(key.name)}
-                    <tr>
-                      <td class="font-bold">
-                        {key.name.split("_").join(" ")}
-                      </td>
-                      {#each temp.rows as row}
-                        <td
-                          class={key.name == "Time"
-                            ? "font-bold text-center"
-                            : "text-center"}
-                        >
-                          {handleName(row[i], key.name)}
-                        </td>
-                      {/each}
-                    </tr>
-                  {/if}
-                {/each}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
-          <h3 class="font-bold text-3xl">Recent Travelling</h3>
-          <div class="grid grid-cols-2 gap-3 p-5 rounded-lg border">
-            <p class="text-center">
-              <span class="font-bold">Travelled Recently ? </span> :
-              <span
-                class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                  .rows[0][11] != 'Yes'
-                  ? 'bg-red-500'
-                  : 'bg-green-500'}"
+          <sl-tab-panel name="clinical">
+            <h3 class="text-3xl font-bold">Clinical Background</h3>
+            <div class="grid grid-cols-2 gap-3 p-5">
+              <div
+                class="flex flex-col gap-3 p-5 rounded-lg border justify-around"
               >
-                {temp.rows[0][11] != null ? temp.rows[0][11].value : "N/A"}
-              </span>
-            </p>
-
-            <p class="text-center">
-              <span class="font-bold">Where ?</span> :
-              <span
-                class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                  .rows[0][12] != null
-                  ? 'bg-yellow-500'
-                  : 'bg-green-500'}"
-                >{temp.rows[0][12] != null
-                  ? temp.rows[0][12].value
-                  : "N/A"}</span
-              >
-            </p>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border">
-          <h3 class="font-bold text-3xl">Laboratory Tests</h3>
-          {#each temp.rows as test}
-            {#if test[13]}
-              <div class="p-5 shadow-lg rounded-lg border">
-                <p class="flex flex-col text-center font-bold text-3xl mb-5">
-                  {test[13].value}
-                  <span class="font-normal text-base m-2"
-                    >{handleName(test[14], "Time")}</span
+                <p class="text-center">
+                  <span class="font-bold">Symptoms</span>
+                  <span
+                    class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
+                      .rows[0][6] != null
+                      ? 'bg-red-500'
+                      : 'bg-green-500'}"
+                    >{temp.rows[0][6] != null
+                      ? temp.rows[0][6].value
+                      : "N/A"}</span
                   >
                 </p>
-                <p />
-                <div class="grid grid-cols-2 justify-evenly">
-                  <p class="text-center text-xl">
+                <div class="flex flex-row gap-3 p-5 justify-evenly">
+                  <p>
+                    <span class="font-bold">Screening Purpose</span> :
                     <span
-                      class="px-10 py-2 m-5 text-white font-bold border rounded text-center {test[14]
-                        ?.value == 'Present'
-                        ? 'bg-red-500'
-                        : 'bg-green-500'}"
+                      >{temp.rows[0][7] != null
+                        ? temp.rows[0][7].value
+                        : "N/A"}</span
                     >
-                      {test[14]?.value}
-                    </span>
                   </p>
-                  <p class="text-center">
-                    {handleName(test[14], "Time")}
+                  <p>
+                    <span class="font-bold">Symptom Detail</span> :
+                    <span
+                      >{temp.rows[0][8] != null
+                        ? temp.rows[0][8].items[0].value.value
+                        : "N/A"}</span
+                    >
                   </p>
                 </div>
               </div>
-            {/if}
-          {/each}
-        </div>
+              <div
+                class="flex flex-row gap-3 p-5 rounded-lg border justify-around items-center"
+              >
+                <p>
+                  <span class="font-bold">Present Conditions</span> :
+                  <span
+                    >{temp.rows[0][9]?.value != null
+                      ? temp.rows[0][9].value
+                      : "N/A"}</span
+                  >
+                </p>
+                <p>
+                  <span class="font-bold">Specific Condition</span> :
+                  <span
+                    >{temp.rows[0][10] != null
+                      ? temp.rows[0][10].items[0].value.value
+                      : "N/A"}</span
+                  >
+                </p>
+              </div>
+            </div>
+          </sl-tab-panel>
+
+          <sl-tab-panel name="vital">
+            <div class="flex flex-col gap-3 p-5">
+              <h3 class="text-3xl font-bold">Vital Signs</h3>
+              <div class="flex flex-col gap-3 p-5 rounded-lg border">
+                <table>
+                  <tbody>
+                    {#each temp.columns as key, i}
+                      {#if table.has(key.name)}
+                        <tr>
+                          <td class="font-bold">
+                            {key.name.split("_").join(" ")}
+                          </td>
+                          {#each temp.rows as row}
+                            <td
+                              class={key.name == "Time"
+                                ? "font-bold text-center"
+                                : "text-center"}
+                            >
+                              {handleName(row[i], key.name)}
+                            </td>
+                          {/each}
+                        </tr>
+                      {/if}
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </sl-tab-panel>
+
+          <sl-tab-panel name="travel">
+            <div class="flex flex-col gap-3 p-5">
+              <h3 class="font-bold text-3xl">Recent Travelling</h3>
+              <div class="grid grid-cols-2 gap-3 p-5 rounded-lg border">
+                <p class="text-center">
+                  <span class="font-bold">Travelled Recently ? </span> :
+                  <span
+                    class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
+                      .rows[0][11] != 'Yes'
+                      ? 'bg-red-500'
+                      : 'bg-green-500'}"
+                  >
+                    {temp.rows[0][11] != null ? temp.rows[0][11].value : "N/A"}
+                  </span>
+                </p>
+
+                <p class="text-center">
+                  <span class="font-bold">Where ?</span> :
+                  <span
+                    class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
+                      .rows[0][12] != null
+                      ? 'bg-yellow-500'
+                      : 'bg-green-500'}"
+                    >{temp.rows[0][12] != null
+                      ? temp.rows[0][12].value
+                      : "N/A"}</span
+                  >
+                </p>
+              </div>
+            </div>
+          </sl-tab-panel>
+
+          <sl-tab-panel name="lab">
+            <div class="flex flex-col gap-3 p-5">
+              <h3 class="font-bold text-3xl">Laboratory Tests</h3>
+              {#each temp.rows as test}
+                {#if test[13]}
+                  <div class="p-5 rounded-lg border">
+                    <p
+                      class="flex flex-col text-center font-bold text-3xl mb-5"
+                    >
+                      {test[13].value}
+                      <span class="font-normal text-base m-2"
+                        >{handleName(test[14], "Time")}</span
+                      >
+                    </p>
+                    <p />
+                    <div class="grid grid-cols-2 justify-evenly">
+                      <p class="text-center text-xl">
+                        <span
+                          class="px-10 py-2 m-5 text-white font-bold border rounded text-center {test[15]
+                            ?.value == 'Present'
+                            ? 'bg-red-500'
+                            : 'bg-green-500'}"
+                        >
+                          {test[15]?.value}
+                        </span>
+                      </p>
+                      <p class="text-center">
+                        {handleName(test[14], "Time")}
+                      </p>
+                    </div>
+                  </div>
+                {/if}
+              {/each}
+            </div>
+          </sl-tab-panel>
+        </sl-tab-group>
       {:else}
         <p
           class="font-bold text-3xl text-center rounded-lg border shadow-lg p-5"
