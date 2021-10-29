@@ -1,10 +1,13 @@
 <script>
   import axios from "axios";
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   export let ehrId;
   if (!ehrId) {
     ehrId = window.location.pathname.split("/")[2];
   }
+  import { useNavigate } from "svelte-navigator";
+  let navigo = useNavigate();
   console.log(ehrId);
   const templateId = "Covid.form.v1";
   let navigate;
@@ -19,8 +22,7 @@
         }
       )
       .then((response) => {
-        alert("Successfully Posted");
-        console.log(response.data);
+        navigo(-1);
       })
       .catch((err) => {
         alert(err);
@@ -30,14 +32,11 @@
 
 <h2 class="font-sans text-6xl font-bold">Enter Details</h2>
 <mb-form
-  transition:fade={{ duration: 1000 }}
+  in:fade={{ duration: 1000 }}
   class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
   ref="formRef"
   on:mb-submit={handleSubmit}
 >
-  <mb-context path="covid.form.v1/context/start_time" />
-  <mb-context path="covid.form.v1/context/setting" />
-
   <sl-tab-group bind:this={navigate}>
     <sl-tab slot="nav" panel="clinical">OPD</sl-tab>
     <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
@@ -47,6 +46,11 @@
     <sl-tab-panel name="clinical">
       <div class="flex flex-col gap-3 p-5 m-5">
         <p class="font-bold text-lg">Patient History and Background</p>
+
+        <mb-context path="covid.form.v1/category" />
+        <mb-context path="covid.form.v1/context/start_time" />
+        <mb-context path="covid.form.v1/context/setting" />
+
         <mb-select
           path="covid.form.v1/clinical_background/covid_19_admission/hospital_admission_status"
           label="Hospital admission status"
@@ -69,11 +73,12 @@
         <mb-context
           path="covid.form.v1/clinical_background/covid_19_admission/subject"
         />
-        <mb-duration
+        <!-- <mb-duration
           year
           path="covid.form.v1/clinical_background/age/chronological_age"
           label="Age"
-        />
+        /> -->
+
         <mb-context path="covid.form.v1/clinical_background/age/time" />
         <mb-context path="covid.form.v1/clinical_background/age/language" />
         <mb-context path="covid.form.v1/clinical_background/age/encoding" />
@@ -313,10 +318,15 @@
           path="covid.form.v1/clinical_background/lab_testing/laboratory_test_result/any_event:0/overall_test_status_timestamp"
           label="Overall test status timestamp"
         />
-        <mb-input
+
+        <mb-text-select
           path="covid.form.v1/clinical_background/lab_testing/laboratory_test_result/any_event:0/conclusion"
           label="Conclusion"
-        />
+        >
+          <mb-option value="Positive" label="Positive" />
+          <mb-option value="Negative" label="Negative" />
+          <mb-option value="Inconclusive" label="Unknown" />
+        </mb-text-select>
 
         <mb-input
           path="covid.form.v1/clinical_background/lab_testing/laboratory_test_result/any_event:0/test_diagnosis:0"

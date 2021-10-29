@@ -46,14 +46,14 @@
           <span>{patient.PhoneNo}</span>
         </p>
 
-        <div class="flex justify-end">
-          <button
+        <div class="flex justify-end items-center">
+          <sl-button
+            type="success"
             on:click|preventDefault={() =>
               handleClick(patient.ehrId, patient.Name, patient.AdhaarNo)}
-            class="bg-blue-500 hover:bg-blue-700 px-10 py-2 text-white font-bold border border-blue-700 rounded flex items-center"
           >
-            View
-          </button>
+            <sl-icon name="hdd-stack-fill" slot="suffix" />View Details
+          </sl-button>
         </div>
       </div>
     </div>
