@@ -10,25 +10,14 @@
   import { Router, Link, Route } from "svelte-navigator";
   import CompoForm from "./components/Startform.svelte";
   import Patient from "./components/getPatient.svelte";
+  import NavBar from "./components/nav.svelte";
   let baseURL = "http://localhost:3000/";
 </script>
 
 <Router>
-  <header>
-    <ul class="flex p-5">
-      <li class="mr-2">
-        <Link to="/">
-          <button
-            class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          >
-            Home
-          </button>
-        </Link>
-      </li>
-    </ul>
-  </header>
+  <NavBar />
 
-  <main class="p-2 md:p-12 flex flex-col gap-5">
+  <main class="p-2 md:p-12 flex flex-col gap-5 h-full">
     <Route path="/new">
       <New {baseURL} />
     </Route>
