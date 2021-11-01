@@ -12,11 +12,11 @@
   <ul class="flex p-5">
     <li class="mr-2">
       <Link to="/">
-        <sl-button type="primary" size="medium"
+        <sl-button type="neutral" size="medium"
           ><sl-icon name="house-door-fill" slot="prefix" /> Home
         </sl-button>
       </Link>
-      <sl-button type="primary" size="medium" on:click={handleBack}
+      <sl-button type="neutral" outline size="medium" on:click={handleBack}
         ><sl-icon name="arrow-left-square-fill" slot="prefix" /> Back
       </sl-button>
     </li>
