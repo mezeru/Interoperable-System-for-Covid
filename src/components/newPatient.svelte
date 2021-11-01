@@ -2,7 +2,7 @@
   import Details from "./Startform.svelte";
   import Demo from "./newform.svelte";
   export let baseURL;
-  let display = 0;
+  let display = 1;
   let ehrId = null;
 </script>
 
