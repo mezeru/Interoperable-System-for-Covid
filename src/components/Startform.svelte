@@ -52,6 +52,7 @@
         <mb-context path="covid.form.v1/context/setting" />
 
         <mb-select
+          required
           path="covid.form.v1/clinical_background/covid_19_admission/hospital_admission_status"
           label="Hospital admission status"
         >
