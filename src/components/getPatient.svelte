@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { allCompositions } from "../aql";
+  import { Vitals, compositionsList, Lab } from "../aql";
   import { each, text } from "svelte/internal";
-  import { useNavigate } from "svelte-navigator";
+  import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import LineChart from "./LineChart.svelte";
@@ -9,8 +9,8 @@
 
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
-  let labCounter = 0;
-  let navigateGrp;
+  let listComp = [];
+  let listLabs = [];
   const navigate = useNavigate();
   let ehrId = window.location.pathname.split("/")[2];
   let searchParams = new URLSearchParams(window.location.search);
@@ -39,10 +39,13 @@
   };
 
   onMount(async () => {
-    console.log(ehrId);
-    const resp = await allCompositions(ehrId);
-    console.log(resp);
-    temp = resp;
+    let list;
+    temp = await Vitals(ehrId);
+    list = await compositionsList(ehrId);
+    listComp = list.rows;
+    list = await Lab(ehrId);
+    listLabs = list.rows;
+    console.log(list);
 
     try {
       await axios.get(
@@ -97,7 +100,13 @@
 
     switch (key) {
       case "Time":
-        let time = new Date(row.value);
+        let time;
+        if (row.value) {
+          time = new Date(row.value);
+        } else {
+          time = new Date(row);
+        }
+
         return (
           time.getDay().toString() +
           "/" +
@@ -155,11 +164,12 @@
             {temp.rows[0][1].value == "YES" ? "Admitted" : "Not Admitted"}
           </p>
         </div>
-        <sl-tab-group bind:this={navigateGrp}>
+        <sl-tab-group>
           <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
           <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
           <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
           <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
+          <sl-tab slot="nav" panel="Compositions">Compositions Posted</sl-tab>
 
           <sl-tab-panel name="clinical">
             <h3 class="text-3xl font-bold">Clinical Background</h3>
@@ -294,8 +304,8 @@
               <h3 class="font-bold text-4xl mb-5 text-center">
                 Laboratory Tests
               </h3>
-              {#each temp.rows as test}
-                {#if test[13]}
+              {#each listLabs as test}
+                {#if test[1]}
                   <div
                     class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
                   >
@@ -303,32 +313,55 @@
                       <p
                         class="flex flex-col text-center font-bold text-3xl mb-5 text-white"
                       >
-                        {test[13].value}
+                        {test[1].value}
                         <span class="font-normal text-base m-2 text-white"
-                          >{@html handleName(test[14], "Time")}</span
+                          >{@html handleName(test[2], "Time")}</span
                         >
                       </p>
-
-                      <p class="text-center text-xl">
-                        <span
-                          class="px-10 py-2 m-5 text-white font-bold border-gray-900 border rounded text-center {test[15]
-                            ?.value == 'Positive'
+                      <div class="flex items-center justify-center">
+                        <p
+                          class="{test[3]?.value == 'Positive'
                             ? 'bg-red-500'
-                            : test[15]?.value == 'Negative'
+                            : test[3]?.value == 'Negative'
                             ? 'bg-green-500'
-                            : 'bg-yellow-500'}"
+                            : 'bg-yellow-500'} px-5 py-3 text-3xl rounded-lg text-white"
                         >
-                          {test[15]?.value}
-                        </span>
-                      </p>
+                          {test[3]?.value}
+                        </p>
+                      </div>
                     </div>
                     <div class="flex justify-evenly">
                       <p
                         class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 text-lg"
                       >
-                        {test[16] != null ? test[16].value : "No Comments"}
+                        {test[4] != null ? test[4].value : "No Comments"}
                       </p>
                     </div>
+                  </div>
+                  <br />
+                {/if}
+              {/each}
+            </div>
+          </sl-tab-panel>
+          <sl-tab-panel name="Compositions">
+            <div class="flex flex-col gap-3 p-5">
+              <h3 class="font-bold text-3xl mb-5 text-center">
+                Compositions List
+              </h3>
+              {#each listComp as comp}
+                {#if comp[1]}
+                  <div
+                    class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-800 text-gray-200 items-center"
+                  >
+                    <div class="text-center">
+                      {@html handleName(comp[0], "Time")}
+                    </div>
+                    <Link
+                      class="text-center hover:text-white"
+                      to={`/post-data/${ehrId}`}
+                    >
+                      Edit Composition
+                    </Link>
                   </div>
                   <br />
                 {/if}

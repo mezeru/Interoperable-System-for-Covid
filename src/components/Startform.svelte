@@ -74,11 +74,6 @@
         <mb-context
           path="covid.form.v1/clinical_background/covid_19_admission/subject"
         />
-        <!-- <mb-duration
-          year
-          path="covid.form.v1/clinical_background/age/chronological_age"
-          label="Age"
-        /> -->
 
         <mb-context path="covid.form.v1/clinical_background/age/time" />
         <mb-context path="covid.form.v1/clinical_background/age/language" />
@@ -167,6 +162,7 @@
           path="covid.form.v1/clinical_background/management_treatment_screening_questionnaire/subject"
         />
         <mb-quantity
+          required
           default="Cel"
           path="covid.form.v1/clinical_background/vital_signs/body_temperature/any_event:0/temperature"
           label="Temperature"
@@ -208,6 +204,7 @@
             <mb-option value="at0064" label="Not detected" />
           </mb-select>
           <mb-quantity
+            required
             default="/min"
             path="covid.form.v1/clinical_background/vital_signs/respiration/any_event:0/rate"
             label="Rate"
