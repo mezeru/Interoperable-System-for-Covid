@@ -130,7 +130,7 @@
   };
 </script>
 
-<div in:fly={{ y: 200, duration: 500 }}>
+<div in:fly={{ y: 200, duration: 500 }} class="bg-white rounded-lg shadow-lg">
   <div
     class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >

@@ -18,9 +18,7 @@
   <NavBar />
 
   <main class="p-2 md:p-12 flex flex-col gap-5 h-full">
-    <Route path="/new">
-      <New {baseURL} />
-    </Route>
+    <Route path="/new" component={New} />
 
     <Route path="/get">
       <Get {baseURL} />

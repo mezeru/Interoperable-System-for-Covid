@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex justify-center">
-  <div class="grid grid-cols-2 gap-10">
+  <div class="grid grid-cols-4 gap-10">
     <Link to="/new" class="flex-auto flex justify-center">
       <sl-button type="primary" size="large"
         ><sl-icon name="plus-lg" slot="prefix" /> New Patient
