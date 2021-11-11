@@ -1,10 +1,28 @@
 <script>
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  export let ehrId;
   import { useNavigate } from "svelte-navigator";
   import { ehrscape } from "../service";
+
+  export let ehrId;
+  export let compId = null;
+  let form;
+
   let navigo = useNavigate();
+
+  onMount(async () => {
+    if (compId) {
+      const r = await ehrscape.get(`/composition/${compId}`, {
+        params: { format: "FLAT" },
+      });
+      const data = r.data?.composition;
+      console.log({ data });
+      if (data) {
+        form.import(data);
+      }
+    }
+  });
+
   const templateId = "Covid.form.v1";
   const handleSubmit = (e) => {
     console.log(e.detail);
@@ -25,6 +43,7 @@
 
 <h2 class="font-sans text-6xl font-bold">Enter Details</h2>
 <mb-form
+  bind:this={form}
   in:fade={{ duration: 1000 }}
   class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
   ref="formRef"

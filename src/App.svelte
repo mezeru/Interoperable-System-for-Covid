@@ -24,7 +24,7 @@
 
     <Route path="/patient/:id/:ehrId" component={Patient} />
 
-    <Route path="/postdata/:ehrId" component={CompoForm} />
+    <Route path="/postdata/:ehrId/:compId" component={CompoForm} />
 
     <Route>
       <Home />

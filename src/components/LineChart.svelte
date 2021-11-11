@@ -1,4 +1,4 @@
-<!-- <script lang="ts">
+<script>
   import {
     Chart,
     ArcElement,
@@ -25,8 +25,8 @@
     Title,
     Tooltip,
     SubTitle,
+    // @ts-ignore
   } from "chart.js";
-  import { onMount } from "svelte";
 
   Chart.register(
     ArcElement,
@@ -55,68 +55,73 @@
     SubTitle
   );
 
-  let ctx;
-  let row;
-  let element;
+  const handleDate = (value) => {
+    let time;
+
+    time = new Date(value);
+
+    return (
+      time.getDay().toString() +
+      "/" +
+      time.getMonth().toString() +
+      "/" +
+      time.getFullYear().toString() +
+      "  " +
+      time.getHours().toString() +
+      ":" +
+      time.getMinutes().toString()
+    );
+  };
+
+  import { onMount } from "svelte";
   let chart;
-  export let labels;
+  let element;
+  let ctx;
   export let label;
-  let color;
-
-  const handleName = (row, key) => {
-    switch (key) {
-      case "Time":
-        let time = new Date(row.value);
-        return (
-          time.getDay().toString() +
-          "/" +
-          time.getMonth().toString() +
-          "/" +
-          time.getFullYear().toString() +
-          "<br/>" +
-          time.getHours().toString() +
-          ":" +
-          time.getMinutes().toString()
-        );
-
-      case "SpO2":
-        return row.numerator;
-
-      case "Temperature":
-      case "Pulse_Rate":
-        return row.magnitude;
-    }
-    return row.value;
-  };
-
-  const handleData = (row, labels) => {
-    let data = [];
-    row.forEach((com) => {
-      if (labels.include(com[0])) {
-        data.push(handleName(com[0], label));
-      }
-    });
-  };
-
+  export let color = "rgb(255, 99, 132)";
+  export let labels;
+  export let min;
+  export let max;
+  export let data;
   onMount(() => {
-    const chartElement = element as HTMLCanvasElement;
+    const chartElement = element;
     ctx = chartElement.getContext("2d");
+    console.log(label);
     chart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: labels,
+        labels: labels.map((x) => handleDate(x)).reverse(),
         datasets: [
           {
-            data: handleData(row, labels),
-            label: label,
+            data: data.reverse(),
+            label,
             borderColor: color,
             backgroundColor: color,
-            tension: 0.1,
+            tension: 0.01,
           },
         ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 8,
+            },
+          },
+          y: {
+            suggestedMax: max,
+            suggestedMin: min,
+          },
+        },
       },
     });
   });
 </script>
 
-<canvas bind:this={element} width="400" height="400" id="myChart" /> -->
+<canvas bind:this={element} width="100px" height="60px" />
