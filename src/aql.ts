@@ -57,7 +57,7 @@ export const compositionsList = async (ehrId :string) =>{
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0026]/value as DomInter
     from EHR e CONTAINS COMPOSITION c
     WHERE e/ehr_id/value='${ehrId}'
-    ORDER by Time ASC
+    ORDER by Time DESC
     `;
 
     const r = await openehr.post(`/query/aql`, {

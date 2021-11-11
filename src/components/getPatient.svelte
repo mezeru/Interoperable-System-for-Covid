@@ -14,6 +14,7 @@
   const navigate = useNavigate();
   export let ehrId;
   export let id;
+  export let name;
   let fullName = "";
   let time = [];
 
@@ -61,9 +62,6 @@
     listComp = list.rows;
     list = await Lab(ehrId);
     listLabs = list.rows;
-
-    const res = await mongo.get(`search?AdhaarNo=${id}`);
-    fullName = res.data.Name;
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -115,24 +113,14 @@
 
     switch (key) {
       case "Time":
-        let time;
-        if (row.value) {
-          time = new Date(row.value);
-        } else {
-          time = new Date(row);
-        }
-
-        return (
-          time.getDay().toString() +
-          "/" +
-          time.getMonth().toString() +
-          "/" +
-          time.getFullYear().toString() +
-          "<br/>" +
-          time.getHours().toString() +
-          ":" +
-          time.getMinutes().toString()
-        );
+        return `<sl-format-date
+                  day="numeric"
+                  month="long"
+                  hour="numeric"
+                  minute="numeric"
+                  hour-format="12"
+                  date=${row.value}
+                />`;
 
       case "SpO2":
         return row.numerator + "%";
@@ -151,7 +139,7 @@
   >
     <div>
       <p class="text-2xl text-white">{id}</p>
-      <p class="font-bold text-4xl text-white">{fullName}</p>
+      <p class="font-bold text-4xl text-white">{name}</p>
     </div>
     <div class="flex justify-center items-center">
       <sl-button
@@ -372,7 +360,7 @@
                       >
                         {test[1].value}
                         <span class="font-normal text-base m-2 text-white"
-                          >{@html handleName(test[2], "Time")}</span
+                          >{handleName(test[2], "Time")}</span
                         >
                       </p>
                       <div class="flex items-center justify-center">
@@ -414,7 +402,14 @@
                   class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-800 text-gray-200 items-center"
                 >
                   <div class="text-center">
-                    {@html handleName(comp[0], "Time")}
+                    <sl-format-date
+                      month="long"
+                      day="numeric"
+                      hour="numeric"
+                      minute="numeric"
+                      hour-format="12"
+                      date={comp[0]}
+                    />
                   </div>
                   <Link
                     class="text-center hover:text-white text-xl"

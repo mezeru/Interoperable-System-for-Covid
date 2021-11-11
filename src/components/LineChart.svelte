@@ -54,22 +54,14 @@
     SubTitle
   );
 
-  const handleDate = (value) => {
-    let time;
-
-    time = new Date(value);
-
-    return (
-      time.getDay().toString() +
-      "/" +
-      time.getMonth().toString() +
-      "/" +
-      time.getFullYear().toString() +
-      "  " +
-      time.getHours().toString() +
-      ":" +
-      time.getMinutes().toString()
-    );
+  export const handleDate = (value) => {
+    return new Intl.DateTimeFormat("en-GB", {
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hourCycle: "h12",
+    }).format(new Date(value.replace("Etc/UTC", "Z")));
   };
 
   import { onMount } from "svelte";
@@ -110,7 +102,7 @@
           x: {
             ticks: {
               autoSkip: true,
-              maxTicksLimit: 8,
+              maxTicksLimit: 10,
             },
           },
           y: {

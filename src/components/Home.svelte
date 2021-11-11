@@ -23,10 +23,10 @@
     </Link>
   </div>
   <div class="grid grid-cols-1 gap-5 m-5">
-    <Link to="/Templates" class="flex-auto flex justify-center">
+    <!-- <Link to="/Templates" class="flex-auto flex justify-center">
       <sl-button type="neutral" size="large"
         ><sl-icon name="layers-fill" slot="prefix" /> List or Add openEHR Templates
       </sl-button>
-    </Link>
+    </Link> -->
   </div>
 </div>

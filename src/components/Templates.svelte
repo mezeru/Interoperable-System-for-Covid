@@ -11,19 +11,15 @@
   });
 
   const handleDate = (date) => {
-    let time = new Date(date);
-
-    return (
-      time.getDay().toString() +
-      "/" +
-      time.getMonth().toString() +
-      "/" +
-      time.getFullYear().toString() +
-      "<br/>" +
-      time.getHours().toString() +
-      ":" +
-      time.getMinutes().toString()
-    );
+    return `<sl-format-date
+                  day="numeric"
+                  month="long"
+                  year="numeric"
+                  hour="numeric"
+                  minute="numeric"
+                  hour-format="12"
+                  date=${date}
+                />`;
   };
 
   const handleClick = async () => {
@@ -57,7 +53,9 @@
 
 {#if templates.length > 0}
   <div>
-    <h1 class="text-4xl m-5">Templates Posted</h1>
+    <h3 class="text-5xl m-5 text-center font-bold text-blue-500">
+      Templates Posted
+    </h3>
   </div>
   <div class="flex flex-col p-5 m-2">
     {#each templates as temp, i}

@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition";
   import { useNavigate } from "svelte-navigator";
   import { ehrscape } from "../service";
+  import { bind } from "svelte/internal";
 
   export let ehrId;
   export let compId = null;
@@ -11,7 +12,7 @@
   let navigo = useNavigate();
 
   onMount(async () => {
-    if (compId) {
+    if (compId != "None") {
       const r = await ehrscape.get(`/composition/${compId}`, {
         params: { format: "FLAT" },
       });
@@ -91,6 +92,7 @@
         <mb-context path="covid.form.v1/clinical_background/age/language" />
         <mb-context path="covid.form.v1/clinical_background/age/encoding" />
         <mb-context path="covid.form.v1/clinical_background/age/subject" />
+
         <mb-input
           path="covid.form.v1/clinical_background/symptom_sign_screening_questionnaire/any_event:0/screening_purpose"
           label="Screening purpose"
@@ -147,6 +149,7 @@
         <mb-select
           path="covid.form.v1/clinical_background/management_treatment_screening_questionnaire/any_event:0/specific_management_treatment_activity:0/actioned"
           label="Actioned?"
+          disabled={`${false}`}
         >
           <mb-option value="at0023" label="Actioned" />
           <mb-option value="at0024" label="Not actioned" />
@@ -211,12 +214,12 @@
           <mb-select
             path="covid.form.v1/clinical_background/vital_signs/respiration/any_event:0/presence"
             label="Presence"
+            required
           >
             <mb-option value="at0063" label="Present" />
             <mb-option value="at0064" label="Not detected" />
           </mb-select>
           <mb-quantity
-            required
             default="/min"
             path="covid.form.v1/clinical_background/vital_signs/respiration/any_event:0/rate"
             label="Rate"
