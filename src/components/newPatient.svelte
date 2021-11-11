@@ -1,5 +1,4 @@
 <script>
-  import Details from "./Startform.svelte";
   import Demo from "./newform.svelte";
 </script>
 

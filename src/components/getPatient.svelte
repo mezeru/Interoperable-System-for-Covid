@@ -144,7 +144,7 @@
       <sl-button
         type="primary"
         on:click|preventDefault={() => {
-          navigate(`/post-data/${ehrId}`);
+          navigate(`/postdata/${ehrId}`);
         }}
         outline
       >
@@ -345,9 +345,7 @@
                   {/if}
                 {/each}
               {:else}
-                <p
-                  class="font-bold text-3xl text-center rounded-lg border shadow-lg p-5"
-                >
+                <p class="font-bold text-3xl text-center p-5">
                   No Laboratory Tests for this Patient
                 </p>
               {/if}
@@ -368,7 +366,7 @@
                     </div>
                     <Link
                       class="text-center hover:text-white"
-                      to={`/post-data/${ehrId}`}
+                      to={`/postdata/${ehrId}`}
                     >
                       Edit Composition
                     </Link>
@@ -381,9 +379,9 @@
         </sl-tab-group>
       {:else}
         <p
-          class="font-bold text-3xl text-center rounded-lg border shadow-lg p-5"
+          class="text-6xl subpixel-antialiased text-center p-5 text-red-500 font-bold"
         >
-          No Data Posted for this Patient
+          No Data
         </p>
       {/if}
     </div>

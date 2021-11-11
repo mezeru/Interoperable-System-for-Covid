@@ -5,9 +5,9 @@
   import New from "./components/newPatient.svelte";
   import Home from "./components/Home.svelte";
   import Delete from "./components/deleteEHR.svelte";
-  import Get from "./components/GetData.svelte";
+  import Get from "./components/list.svelte";
   import { Router, Route } from "svelte-navigator";
-  import CompoForm from "./components/Startform.svelte";
+  import CompoForm from "./components/Covid.svelte";
   import Patient from "./components/getPatient.svelte";
   import NavBar from "./components/nav.svelte";
 </script>
@@ -24,7 +24,7 @@
 
     <Route path="/patient/:id/:ehrId" component={Patient} />
 
-    <Route path="/post-data/:ehrId" component={CompoForm} />
+    <Route path="/postdata/:ehrId" component={CompoForm} />
 
     <Route>
       <Home />
