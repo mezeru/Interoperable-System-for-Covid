@@ -5,15 +5,16 @@
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import LineChart from "./LineChart.svelte";
-  import axios from "axios";
+  import { mongo, openehr } from "../service";
 
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
   let listComp = [];
   let listLabs = [];
   const navigate = useNavigate();
-  let ehrId = window.location.pathname.split("/")[2];
-  let searchParams = new URLSearchParams(window.location.search);
+  export let ehrId;
+  export let id;
+  let fullName = "";
 
   let table = new Set([
     "Time",
@@ -39,29 +40,30 @@
   };
 
   onMount(async () => {
+    const r = mongo.get(`/`);
     let list;
     temp = await Vitals(ehrId);
     list = await compositionsList(ehrId);
     listComp = list.rows;
     list = await Lab(ehrId);
     listLabs = list.rows;
-    console.log(list);
+    console.log(listLabs);
+
+    const res = await mongo.get(`search?AdhaarNo=${id}`);
+    fullName = res.data.Name;
 
     try {
-      await axios.get(
-        `http://localhost:8080/ehrbase/rest/openehr/v1/ehr/${ehrId}`,
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      await openehr.get(`/ehr/${ehrId}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
       console.log("EHR exists");
     } catch (e) {
       if (e.response.status === 404) {
         console.log("EHR Does not exist, creating");
-        const r = await axios.put(
-          `http://localhost:8080/ehrbase/rest/openehr/v1/ehr/${ehrId}`,
+        const r = await openehr.put(
+          `/ehr/${ehrId}`,
           {
             _type: "EHR_STATUS",
             archetype_node_id: "openEHR-EHR-EHR_STATUS.generic.v1",
@@ -135,8 +137,8 @@
     class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
     <div>
-      <p class="text-2xl text-white">{searchParams.get("Aadhaar")}</p>
-      <p class="font-bold text-4xl text-white">{searchParams.get("Name")}</p>
+      <p class="text-2xl text-white">{id}</p>
+      <p class="font-bold text-4xl text-white">{fullName}</p>
     </div>
     <div class="flex justify-center items-center">
       <sl-button
@@ -301,46 +303,54 @@
 
           <sl-tab-panel name="lab">
             <div class="flex flex-col gap-3 p-5">
-              <h3 class="font-bold text-4xl mb-5 text-center">
-                Laboratory Tests
-              </h3>
-              {#each listLabs as test}
-                {#if test[1]}
-                  <div
-                    class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
-                  >
-                    <div class="grid grid-cols-2 justify-evenly">
-                      <p
-                        class="flex flex-col text-center font-bold text-3xl mb-5 text-white"
-                      >
-                        {test[1].value}
-                        <span class="font-normal text-base m-2 text-white"
-                          >{@html handleName(test[2], "Time")}</span
-                        >
-                      </p>
-                      <div class="flex items-center justify-center">
+              {#if listLabs[0]?.[1]}
+                <h3 class="font-bold text-4xl mb-5 text-center">
+                  Laboratory Tests
+                </h3>
+                {#each listLabs as test}
+                  {#if test[1]}
+                    <div
+                      class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
+                    >
+                      <div class="grid grid-cols-2 justify-evenly">
                         <p
-                          class="{test[3]?.value == 'Positive'
-                            ? 'bg-red-500'
-                            : test[3]?.value == 'Negative'
-                            ? 'bg-green-500'
-                            : 'bg-yellow-500'} px-5 py-3 text-3xl rounded-lg text-white"
+                          class="flex flex-col text-center font-bold text-3xl mb-5 text-white"
                         >
-                          {test[3]?.value}
+                          {test[1].value}
+                          <span class="font-normal text-base m-2 text-white"
+                            >{@html handleName(test[2], "Time")}</span
+                          >
+                        </p>
+                        <div class="flex items-center justify-center">
+                          <p
+                            class="{test[3]?.value == 'Positive'
+                              ? 'bg-red-500'
+                              : test[3]?.value == 'Negative'
+                              ? 'bg-green-500'
+                              : 'bg-yellow-500'} px-5 py-3 text-3xl rounded-lg text-white"
+                          >
+                            {test[3]?.value}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="flex justify-evenly">
+                        <p
+                          class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 text-lg"
+                        >
+                          {test[4] != null ? test[4].value : "No Comments"}
                         </p>
                       </div>
                     </div>
-                    <div class="flex justify-evenly">
-                      <p
-                        class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 text-lg"
-                      >
-                        {test[4] != null ? test[4].value : "No Comments"}
-                      </p>
-                    </div>
-                  </div>
-                  <br />
-                {/if}
-              {/each}
+                    <br />
+                  {/if}
+                {/each}
+              {:else}
+                <p
+                  class="font-bold text-3xl text-center rounded-lg border shadow-lg p-5"
+                >
+                  No Laboratory Tests for this Patient
+                </p>
+              {/if}
             </div>
           </sl-tab-panel>
           <sl-tab-panel name="Compositions">

@@ -1,28 +1,21 @@
 <script>
-  import axios from "axios";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   export let ehrId;
-  if (!ehrId) {
-    ehrId = window.location.pathname.split("/")[2];
-  }
   import { useNavigate } from "svelte-navigator";
+  import { ehrscape } from "../service";
   let navigo = useNavigate();
-  console.log(ehrId);
   const templateId = "Covid.form.v1";
-  let navigate;
   const handleSubmit = (e) => {
     console.log(e.detail);
-    axios
-      .post(
-        "http://localhost:8080/ehrbase/rest/ecis/v1/composition",
-        e.detail,
-        {
-          params: { format: "FLAT", templateId, ehrId },
-        }
-      )
+    ehrscape
+      .post("/composition", e.detail, {
+        params: { format: "FLAT", templateId, ehrId },
+      })
       .then((response) => {
-        navigo(-1);
+        if (response.status == 200) {
+          console.log(navigo(-1));
+        }
       })
       .catch((err) => {
         alert(err);
@@ -37,7 +30,7 @@
   ref="formRef"
   on:mb-submit={handleSubmit}
 >
-  <sl-tab-group bind:this={navigate}>
+  <sl-tab-group>
     <sl-tab slot="nav" panel="clinical">OPD</sl-tab>
     <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
     <sl-tab slot="nav" panel="assess">Assessment</sl-tab>

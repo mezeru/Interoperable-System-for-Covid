@@ -10,7 +10,7 @@ export const Lab = async (ehrId :string) =>{
   const query = `SELECT c/context/start_time/value as time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value as Test, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0075]/value as Test_time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0057]/value as Result, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value as Suggesition from EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value='${ehrId}' LIMIT 15 ORDER by time DESC
   `;
 
-  const r = await openehr.post(`/openehr/v1/query/aql`, {
+  const r = await openehr.post(`/query/aql`, {
     q: query,
   });
   return formatAql(r.data);  
@@ -20,7 +20,7 @@ export const Lab = async (ehrId :string) =>{
 export const compositionsList = async (ehrId :string) =>{
     const query = `SELECT c/context/start_time/value as time, c/uid/value as uid from EHR e CONTAINS COMPOSITION c where e/ehr_id/value='${ehrId}' LIMIT 15 ORDER BY time DESC
     `
-    const r = await openehr.post(`/openehr/v1/query/aql`, {
+    const r = await openehr.post(`/query/aql`, {
       q: query,
     });
     return formatAql(r.data);  
@@ -46,7 +46,7 @@ export const compositionsList = async (ehrId :string) =>{
     ORDER by Time DESC
     `;
 
-    const r = await openehr.post(`/openehr/v1/query/aql`, {
+    const r = await openehr.post(`/query/aql`, {
       q: query,
     });
     return formatAql(r.data);

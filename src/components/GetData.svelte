@@ -1,27 +1,24 @@
 <script>
   import { useNavigate } from "svelte-navigator";
   const navigate = useNavigate();
-  import axios from "axios";
   import { onMount } from "svelte";
   import { each } from "svelte/internal";
   import { fade, fly } from "svelte/transition";
+  import { mongo } from "../service";
   let patients = [];
-  export let baseURL;
 
   onMount(async () => {
-    const resp = await axios.get(`${baseURL}all`);
+    const resp = await mongo.get("all");
     patients = [...resp.data];
   });
 
-  const handleClick = (ehrId, name, Aadhaar) => {
-    navigate(`/patient/${ehrId}?Name=${name}&Aadhaar=${Aadhaar}`);
+  const handleClick = (Aadhaar, ehrId) => {
+    navigate(`/patient/${Aadhaar}/${ehrId}`);
   };
 
   const handleDelete = async (id) => {
-    const resp = await axios.delete(
-      `http://localhost:3000/delete?AdhaarNo=${id}`
-    );
-    const r = await axios.get(`${baseURL}all`);
+    const resp = await mongo.delete(`/delete?AdhaarNo=${id}`);
+    const r = await mongo.get("all");
     patients = [...r.data];
   };
 </script>
@@ -57,7 +54,7 @@
           <sl-button
             type="success"
             on:click|preventDefault={() =>
-              handleClick(patient.ehrId, patient.Name, patient.AdhaarNo)}
+              handleClick(patient.AdhaarNo, patient.ehrId)}
           >
             <sl-icon name="hdd-stack-fill" slot="suffix" />View Details
           </sl-button>

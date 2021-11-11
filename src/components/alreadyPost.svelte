@@ -1,7 +1,6 @@
 <script>
   import Form from "./Startform.svelte";
-  import axios from "axios";
-  export let baseURL;
+  import { mongo } from "..//service";
   let ehrId;
   let number;
   let data;
@@ -9,7 +8,7 @@
   const handleSubmit = async () => {
     console.log(number);
     try {
-      const resp = await axios.get(`${baseURL}search?AdhaarNo=${number}`);
+      const resp = await mongo.get(`search?AdhaarNo=${number}`);
 
       if (resp.status == 200) {
         display = 1;

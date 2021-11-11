@@ -1,8 +1,10 @@
 <script>
-  export let display;
-  export let ehrId;
-  export let baseURL;
-  import axios from "axios";
+  import { mongo, openehr } from "../service";
+  import { useNavigate } from "svelte-navigator";
+  let ehrId;
+
+  const navigo = useNavigate();
+
   const handleSubmitDemo = async (e) => {
     const target = new FormData(e.target);
     let patient = {};
@@ -12,8 +14,8 @@
     }
 
     try {
-      const respEHR = await axios.post(
-        "http://localhost:8080/ehrbase/rest/openehr/v1/ehr",
+      const respEHR = await openehr.post(
+        "/ehr",
         {
           _type: "EHR_STATUS",
           archetype_node_id: "openEHR-EHR-EHR_STATUS.generic.v1",
@@ -47,10 +49,10 @@
         console.log(ehrId);
 
         try {
-          const resp = await axios.post(`${baseURL}new`, patient);
+          const resp = await mongo.post(`new`, patient);
 
           if (resp.status == 200) {
-            display = 1;
+            navigo(`/patient/${patient.AdhaarNo}/${ehrId}`);
           }
         } catch (e) {
           console.log(e);

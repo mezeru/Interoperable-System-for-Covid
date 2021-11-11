@@ -7,11 +7,10 @@
   import Delete from "./components/deleteEHR.svelte";
   import Add from "./components/alreadyPost.svelte";
   import Get from "./components/GetData.svelte";
-  import { Router, Link, Route } from "svelte-navigator";
+  import { Router, Route } from "svelte-navigator";
   import CompoForm from "./components/Startform.svelte";
   import Patient from "./components/getPatient.svelte";
   import NavBar from "./components/nav.svelte";
-  let baseURL = "http://localhost:3000/";
 </script>
 
 <Router>
@@ -20,25 +19,15 @@
   <main class="p-2 md:p-12 flex flex-col gap-5 h-full">
     <Route path="/new" component={New} />
 
-    <Route path="/get">
-      <Get {baseURL} />
-    </Route>
+    <Route path="/get" component={Get} />
 
-    <Route path="/delete">
-      <Delete />
-    </Route>
+    <Route path="/delete" component={Delete} />
 
-    <Route path="/add-compositions">
-      <Add {baseURL} />
-    </Route>
+    <Route path="/add-compositions" component={Add} />
 
-    <Route path="/patient/:ehrId">
-      <Patient />
-    </Route>
+    <Route path="/patient/:id/:ehrId" component={Patient} />
 
-    <Route path="/post-data/:ehrId">
-      <CompoForm ehrId={null} />
-    </Route>
+    <Route path="/post-data/:ehrId" component={CompoForm} />
 
     <Route>
       <Home />

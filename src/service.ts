@@ -1,10 +1,15 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8080";
 
-
-export const openehr = axios.create({
-  baseURL: `${BASE_URL}/ehrbase/rest`,
-  headers: {
+export const openehr = axios.create({baseURL:"http://localhost:8080/ehrbase/rest/openehr/v1",
+headers: {
     Accept: "application/json",
-  },
-});
+  }});
+
+  export const ehrscape = axios.create({
+    baseURL:"http://localhost:8080/ehrbase/rest/ecis/v1",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  export const mongo = axios.create({baseURL:"http://localhost:5000/"});
