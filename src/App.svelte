@@ -10,6 +10,7 @@
   import CompoForm from "./components/Covid.svelte";
   import Patient from "./components/getPatient.svelte";
   import NavBar from "./components/nav.svelte";
+  import Templates from "./components/Templates.svelte";
 </script>
 
 <Router>
@@ -25,6 +26,8 @@
     <Route path="/patient/:id/:ehrId" component={Patient} />
 
     <Route path="/postdata/:ehrId/:compId" component={CompoForm} />
+
+    <Route path="/Templates" component={Templates} />
 
     <Route>
       <Home />

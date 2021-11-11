@@ -25,7 +25,6 @@
     Title,
     Tooltip,
     SubTitle,
-    // @ts-ignore
   } from "chart.js";
 
   Chart.register(
@@ -90,10 +89,10 @@
     chart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: labels.map((x) => handleDate(x)).reverse(),
+        labels: labels.map((x) => handleDate(x)),
         datasets: [
           {
-            data: data.reverse(),
+            data: data,
             label,
             borderColor: color,
             backgroundColor: color,
@@ -104,7 +103,7 @@
       options: {
         plugins: {
           legend: {
-            display: false,
+            display: true,
           },
         },
         scales: {
@@ -124,4 +123,4 @@
   });
 </script>
 
-<canvas bind:this={element} width="100px" height="60px" />
+<canvas bind:this={element} width="100px" height="75px" />
