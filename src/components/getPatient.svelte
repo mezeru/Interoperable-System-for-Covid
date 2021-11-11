@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Vitals, compositionsList, Lab } from "../aql";
+  import { Vitals, compositionsList, Lab, Clinical, Travel } from "../aql";
   import { each, text } from "svelte/internal";
   import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
@@ -11,6 +11,8 @@
     null;
   let listComp = [];
   let listLabs = [];
+  let clinical = [];
+  let travel = [];
   const navigate = useNavigate();
   export let ehrId;
   export let id;
@@ -38,30 +40,38 @@
     return temp.rows?.map((x) => x[4]?.magnitude);
   };
 
-  const labelsMap = {
-    Temperature: 2,
-  };
+  // const labelsMap = {
+  //   Temperature: 2,
+  // };
 
-  const handleLabels = (name, row) => {
-    let pos = labelsMap[name];
-    let labels = [];
-    row.forEach((col) => {
-      if (col[pos] != null) {
-        labels.push(col[0]);
-      }
-    });
-    return labels;
-  };
+  // const handleLabels = (name, row) => {
+  //   let pos = labelsMap[name];
+  //   let labels = [];
+  //   row.forEach((col) => {
+  //     if (col[pos] != null) {
+  //       labels.push(col[0]);
+  //     }
+  //   });
+  //   return labels;
+  // };
 
   onMount(async () => {
     const r = mongo.get(`/`);
     let list;
     temp = await Vitals(ehrId);
     time = temp.rows?.map((x) => x[0].value);
+
     list = await compositionsList(ehrId);
     listComp = list.rows;
+
     list = await Lab(ehrId);
     listLabs = list.rows;
+
+    list = await Clinical(ehrId);
+    clinical = list.rows;
+
+    list = await Travel(ehrId);
+    travel = list.rows;
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -123,7 +133,7 @@
                 />`;
 
       case "SpO2":
-        return row.numerator + "%";
+        return row.numerator + " %";
 
       case "Temperature":
       case "Pulse_Rate":
@@ -141,13 +151,21 @@
       <p class="text-2xl text-white">{id}</p>
       <p class="font-bold text-4xl text-white">{name}</p>
     </div>
-    <div class="flex justify-center items-center">
+    <div class="grid grid-cols-2 gap-5 justify-center items-center">
+      <sl-button
+        type="success"
+        on:click|preventDefault={() => {
+          navigate(`/assessment/${id}/${ehrId}/${name}`);
+        }}
+      >
+        <sl-icon name="archive-fill" slot="prefix" />Assessment
+      </sl-button>
+
       <sl-button
         type="primary"
         on:click|preventDefault={() => {
           navigate(`/postdata/${ehrId}/None`);
         }}
-        outline
       >
         <sl-icon name="plus-square-fill" slot="prefix" />Add Data
       </sl-button>
@@ -182,13 +200,11 @@
               <p class="text-center">
                 <span class="font-bold">Symptoms</span>
                 <span
-                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                    .rows[0][6] != null
+                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {clinical[0] !=
+                  null
                     ? 'bg-red-500'
                     : 'bg-green-500'}"
-                  >{temp.rows[0][6] != null
-                    ? temp.rows[0][6].value
-                    : "N/A"}</span
+                  >{clinical[0] ? clinical[0][1].value : "N/A"}</span
                 >
               </p>
               <div class="flex flex-row gap-3 p-5 justify-evenly">
@@ -313,32 +329,34 @@
 
         <sl-tab-panel name="travel">
           <div class="flex flex-col gap-3 p-5">
-            <h3 class="font-bold text-3xl">Recent Travelling</h3>
-            <div class="grid grid-cols-2 gap-3 p-5 rounded-lg border">
-              <p class="text-center">
-                <span class="font-bold">Travelled Recently ? </span> :
-                <span
-                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                    .rows[0][11] != 'Yes'
-                    ? 'bg-red-500'
-                    : 'bg-green-500'}"
-                >
-                  {temp.rows[0][11] != null ? temp.rows[0][11].value : "N/A"}
-                </span>
-              </p>
+            <h3 class="font-bold text-3xl">Travel History</h3>
+            <div class="flex flex-col p-5">
+              {#each travel as comp}
+                {#if comp[1]}
+                  <div
+                    class="grid grid-cols-2 gap-3 p-5 rounded-lg border shadow-lg"
+                  >
+                    <p class="text-center">
+                      <span class="font-bold">Travelled Recently ? </span> :
+                      <span
+                        class="px-10 py-2 m-5 text-white font-bold border rounded text-center bg-red-500"
+                      >
+                        {comp[1].value}
+                      </span>
+                    </p>
 
-              <p class="text-center">
-                <span class="font-bold">Where ?</span> :
-                <span
-                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {temp
-                    .rows[0][12] != null
-                    ? 'bg-yellow-500'
-                    : 'bg-green-500'}"
-                  >{temp.rows[0][12] != null
-                    ? temp.rows[0][12].value
-                    : "N/A"}</span
-                >
-              </p>
+                    <p class="text-center">
+                      <span class="font-bold">Where ?</span> :
+                      <span
+                        class="px-10 py-2 m-5 text-white font-bold border rounded text-center {clinical !=
+                        null
+                          ? 'bg-yellow-500'
+                          : 'bg-green-500'}">{comp[2].value}</span
+                      >
+                    </p>
+                  </div>
+                {/if}
+              {/each}
             </div>
           </div>
         </sl-tab-panel>
@@ -399,9 +417,9 @@
             {#each listComp as comp}
               {#if comp[1]}
                 <div
-                  class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-800 text-gray-200 items-center"
+                  class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-900 text-gray-200 items-center"
                 >
-                  <div class="text-center">
+                  <div class="text-center text-lg font-semibold">
                     <sl-format-date
                       month="long"
                       day="numeric"
@@ -411,12 +429,14 @@
                       date={comp[0]}
                     />
                   </div>
-                  <Link
-                    class="text-center hover:text-white text-xl"
-                    to={`/postdata/${ehrId}/${comp[1].substring(0, 36)}`}
-                  >
-                    Edit Composition
-                  </Link>
+                  <div class="flex flex-row items-center justify-center">
+                    <Link
+                      class="text-center text-lg bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-500 hover:text-white font-semibold"
+                      to={`/postdata/${ehrId}/${comp[1].substring(0, 36)}`}
+                    >
+                      Edit Composition
+                    </Link>
+                  </div>
                 </div>
                 <br />
               {/if}

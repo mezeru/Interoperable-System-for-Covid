@@ -94,10 +94,12 @@
         <mb-context path="covid.form.v1/clinical_background/age/subject" />
 
         <mb-input
+          reuired
           path="covid.form.v1/clinical_background/symptom_sign_screening_questionnaire/any_event:0/screening_purpose"
           label="Screening purpose"
         />
         <mb-select
+          required
           path="covid.form.v1/clinical_background/symptom_sign_screening_questionnaire/any_event:0/presence_of_any_symptoms_or_signs"
           label="Presence of any symptoms or signs"
         >
@@ -106,6 +108,7 @@
           <mb-option value="at0033" label="Unknown" />
         </mb-select>
         <mb-input
+          required
           path="covid.form.v1/clinical_background/symptom_sign_screening_questionnaire/any_event:0/specific_symptom_sign:0/symptom_or_sign_name"
           label="Symptom or sign name"
         />

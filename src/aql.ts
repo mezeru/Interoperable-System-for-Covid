@@ -36,7 +36,9 @@ export const compositionsList = async (ehrId :string) =>{
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Vital Signs']/items[openEHR-EHR-OBSERVATION.pulse_oximetry.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0006]/value as SpO2
     from EHR e CONTAINS COMPOSITION c
     WHERE e/ehr_id/value='${ehrId}'
+    LIMIT 10
     ORDER by Time ASC
+
     `;
 
     const r = await openehr.post(`/query/aql`, {
@@ -45,6 +47,39 @@ export const compositionsList = async (ehrId :string) =>{
     return formatAql(r.data);
   };
 
+  export const Travel = async (ehrId :string) => {
+    const query = `SELECT
+    c/context/start_time as Time,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value as Travel,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0026]/value as DomInter
+    from EHR e CONTAINS COMPOSITION c
+    WHERE e/ehr_id/value='${ehrId}'
+    ORDER by Time DESC
+    `
+    const r = await openehr.post(`/query/aql`, {
+      q: query,
+    });
+    return formatAql(r.data);
+  }
+
+  export const Assessment = async (ehrId :string) => {
+    const query = `SELECT
+    c/context/start_time as Time,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0002.1]/value as Risk,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0013.1]/value as RiskFactor,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0017.1]/value as Presence,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0029]/value as date,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0003.1]/value as RiskAssess
+    from EHR e CONTAINS COMPOSITION c
+    WHERE e/ehr_id/value='${ehrId}'
+    ORDER by Time DESC
+    `
+    const r = await openehr.post(`/query/aql`, {
+      q: query,
+    });
+    return formatAql(r.data);
+  }
+
   export const Clinical = async (ehrId :string) => {
     const query = `SELECT
     c/context/start_time as Time,
@@ -52,9 +87,7 @@ export const compositionsList = async (ehrId :string) =>{
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0034]/value as Screening_Purpose,
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0022] as Symptom_Detail,
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.condition_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value as Presenting_conditions,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.condition_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0022] as specific_condition,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value as Travel,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0026]/value as DomInter
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.condition_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0022] as specific_condition
     from EHR e CONTAINS COMPOSITION c
     WHERE e/ehr_id/value='${ehrId}'
     ORDER by Time DESC
