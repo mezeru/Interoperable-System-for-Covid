@@ -7,11 +7,23 @@
   import { quintOut } from "svelte/easing";
   import { mongo } from "../service";
   let patients = [];
+  let ifFil = [];
 
   onMount(async () => {
     const resp = await mongo.get("all");
     patients = [...resp.data];
+    ifFil = [...resp.data];
   });
+
+  const handleFilter = (value) => {
+    if (value) {
+      patients = ifFil.filter((e) =>
+        e.AdhaarNo.toString().startsWith(value.toString())
+      );
+    } else {
+      patients = [...ifFil];
+    }
+  };
 
   const handleClick = (Aadhaar, ehrId, name) => {
     navigate(`/patient/${Aadhaar}/${ehrId}/${name}`);
@@ -25,6 +37,26 @@
 </script>
 
 <h2 class="font-sans text-6xl font-bold mb-14">Patients Registered</h2>
+<div class="flex items-center justify-center">
+  <div>
+    <label
+      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+      for="inline-full-name"
+    >
+      Aadhaar Card
+    </label>
+  </div>
+  <div>
+    <input
+      class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-gray-500 focus:border-gray-200 focus:text-gray-100"
+      id="inline-full-name"
+      type="text"
+      placeholder="XXXX XXXX XXXX XXXX"
+      on:input={(e) => handleFilter(e.target?.value)}
+    />
+  </div>
+</div>
+
 <div class="px-10">
   {#each patients as patient}
     <div
