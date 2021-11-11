@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Vitals, compositionsList, Lab, Clinical, Travel } from "../aql";
-  import { each, text } from "svelte/internal";
   import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
@@ -17,7 +16,6 @@
   export let ehrId;
   export let id;
   export let name;
-  let fullName = "";
   let time = [];
 
   let table = new Set([
@@ -143,24 +141,25 @@
   };
 </script>
 
-<div in:fly={{ y: 200, duration: 500 }} class="bg-white rounded-lg shadow-lg">
+<div in:fly={{ y: 200, duration: 1500 }} class="bg-white rounded-lg shadow-lg">
   <div
     class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
-    <div>
+    <div class="grid grid-cols-1 justify-center items-center">
       <p class="text-2xl text-white">{id}</p>
       <p class="font-bold text-4xl text-white">{name}</p>
     </div>
-    <div class="grid grid-cols-2 gap-5 justify-center items-center">
-      <sl-button
-        type="success"
-        on:click|preventDefault={() => {
-          navigate(`/assessment/${id}/${ehrId}/${name}`);
-        }}
+    <div class="flex justify-center items-center">
+      <p
+        class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl {temp
+          ?.rows[0][1]?.value == 'YES'
+          ? 'bg-yellow-500'
+          : 'bg-green-500'}"
       >
-        <sl-icon name="archive-fill" slot="prefix" />Assessment
-      </sl-button>
-
+        {temp?.rows[0][1]?.value == "YES" ? "Admitted" : "Not Admitted"}
+      </p>
+    </div>
+    <div class="grid grid-cols-1 gap-5 justify-center items-center">
       <sl-button
         type="primary"
         on:click|preventDefault={() => {
@@ -169,21 +168,24 @@
       >
         <sl-icon name="plus-square-fill" slot="prefix" />Add Data
       </sl-button>
+      <sl-button
+        type="success"
+        on:click|preventDefault={() => {
+          navigate(`/assessment/${id}/${ehrId}/${name}`);
+        }}
+      >
+        <sl-icon name="archive-fill" slot="prefix" />Assessment
+      </sl-button>
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 p-5 shadow-lg rounded-b-lg border">
-    {#if temp?.rows.length >= 1}
-      <div>
-        <p
-          class="px-10 py-2 text-white font-bold border rounded text-center text-3xl my-3 {temp
-            .rows[0][1]?.value == 'YES'
-            ? 'bg-yellow-500 border-yellow-1000'
-            : 'bg-green-500 border-green-1000'}"
-        >
-          {temp.rows[0][1]?.value == "YES" ? "Admitted" : "Not Admitted"}
-        </p>
-      </div>
+  <div
+    class="flex flex-col gap-3 p-5 shadow-lg rounded-b-lg border"
+    in:fly={{
+      duration: 2500,
+    }}
+  >
+    {#if temp?.rows}
       <sl-tab-group>
         <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
@@ -204,7 +206,7 @@
                   null
                     ? 'bg-red-500'
                     : 'bg-green-500'}"
-                  >{clinical[0] ? clinical[0][1].value : "N/A"}</span
+                  >{clinical[0] ? clinical[0][1]?.value : "N/A"}</span
                 >
               </p>
               <div class="flex flex-row gap-3 p-5 justify-evenly">
