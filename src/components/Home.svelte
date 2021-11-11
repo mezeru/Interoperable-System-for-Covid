@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex justify-center">
-  <div class="grid grid-cols-4 gap-10">
+  <div class="grid grid-cols-3 gap-10">
     <Link to="/new" class="flex-auto flex justify-center">
       <sl-button type="primary" size="large"
         ><sl-icon name="plus-lg" slot="prefix" /> New Patient
@@ -19,12 +19,6 @@
     <Link to="/delete" class="flex-auto flex justify-center">
       <sl-button type="danger" size="large"
         ><sl-icon name="trash" slot="prefix" /> Delete Patient Data
-      </sl-button>
-    </Link>
-
-    <Link to="/add-compositions" class="flex-auto flex justify-center">
-      <sl-button type="primary" size="large"
-        ><sl-icon name="plus-lg" slot="prefix" /> Add Data of a Patient
       </sl-button>
     </Link>
   </div>

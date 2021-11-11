@@ -5,7 +5,6 @@
   import New from "./components/newPatient.svelte";
   import Home from "./components/Home.svelte";
   import Delete from "./components/deleteEHR.svelte";
-  import Add from "./components/alreadyPost.svelte";
   import Get from "./components/GetData.svelte";
   import { Router, Route } from "svelte-navigator";
   import CompoForm from "./components/Startform.svelte";
@@ -22,8 +21,6 @@
     <Route path="/get" component={Get} />
 
     <Route path="/delete" component={Delete} />
-
-    <Route path="/add-compositions" component={Add} />
 
     <Route path="/patient/:id/:ehrId" component={Patient} />
 
