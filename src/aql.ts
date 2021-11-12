@@ -90,12 +90,11 @@ export const compositionsList = async (ehrId :string) =>{
 
   export const Assessment = async (ehrId :string) => {
     const query = `SELECT
-    c/context/start_time as Time,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0002.1]/value as Risk,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0013.1]/value as RiskFactor,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0017.1]/value as Presence,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0029]/value as date,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0003.1]/value as RiskAssess
+    c/context/start_time/value as Time,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0013.1]/value/value as RiskFactor,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0017.1]/value/value as Presence,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0029]/value/value as date,
+    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0003.1]/value/value as RiskAssess
     from EHR e CONTAINS COMPOSITION c
     WHERE e/ehr_id/value='${ehrId}'
     ORDER by Time DESC

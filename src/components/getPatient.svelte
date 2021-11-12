@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { Vitals, compositionsList, Lab, Clinical, Travel } from "../aql";
+  import {
+    Vitals,
+    compositionsList,
+    Lab,
+    Clinical,
+    Travel,
+    Assessment,
+  } from "../aql";
   import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
@@ -17,6 +24,7 @@
   let listLabs = [];
   let clinical = [];
   let travel = [];
+  let assess = [];
   const navigate = useNavigate();
   export let ehrId;
   export let id;
@@ -74,6 +82,11 @@
 
     list = await Travel(ehrId);
     travel = list.rows;
+
+    list = await Assessment(ehrId);
+    assess = list.rows;
+
+    console.log(assess);
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -213,6 +226,7 @@
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
         <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
         <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
+        <sl-tab slot="nav" panel="assessment">Assessments</sl-tab>
         <sl-tab slot="nav" panel="Compositions">Compositions Posted</sl-tab>
 
         <sl-tab-panel name="clinical">
@@ -427,6 +441,46 @@
                   </div>
                 </div>
                 <br />
+              {/if}
+            {/each}
+          </div>
+        </sl-tab-panel>
+
+        <sl-tab-panel name="assessment">
+          <div class="flex flex-col gap-3 p-5">
+            {#each assess as asses, i}
+              {#if asses[1]}
+                <div
+                  class="rounded-lg shadow-inner bg-gray-900 text-gray-200 p-5"
+                >
+                  <p class="text-3xl text-center font-bold">Assessment {++i}</p>
+                  <div class="grid grid-cols-3 p-2 items-center">
+                    <div class="text-center text-xl font-semibold">
+                      <div>
+                        <sl-format-date
+                          month="long"
+                          day="numeric"
+                          hour-format="12"
+                          date={asses[3]}
+                        />
+                      </div>
+                      <div>
+                        <sl-format-date
+                          hour="numeric"
+                          minute="numeric"
+                          hour-format="12"
+                          date={asses[3]}
+                        />
+                      </div>
+                    </div>
+                    <div class="text-center text-xl font-semibold">
+                      <p>{asses[1]}</p>
+                    </div>
+                    <div>
+                      <p class="text-center text-lg">{asses[4]}</p>
+                    </div>
+                  </div>
+                </div>
               {/if}
             {/each}
           </div>
