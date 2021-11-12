@@ -7,3 +7,19 @@ h1,h2{
     color: #0066ff;
     text-shadow: 0 0 4px #ffffff, 0 0 5px #4000bfa1;
 }
+
+.blinkDiv{
+    animation: blink infinite 1000ms ease-in-out;
+}
+
+@keyframes blink{
+    0%{
+        text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.76);
+    }
+    50%{
+        text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.76);
+    }
+    100%{
+        text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.76);
+    }
+}

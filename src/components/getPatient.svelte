@@ -150,8 +150,8 @@
     </div>
     <div class="flex justify-center items-center">
       <p
-        in:fade={{ duration: 2500 }}
-        class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl {temp
+        in:fade={{ duration: 1500 }}
+        class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl blinkDiv {temp
           ?.rows[0]?.[1]?.value == 'YES'
           ? 'bg-yellow-500'
           : 'bg-green-500'}"
