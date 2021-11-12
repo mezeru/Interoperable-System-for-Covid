@@ -18,7 +18,7 @@
 
     <Link to="/getpatient" class="flex-auto flex justify-center">
       <sl-button type="primary" size="large"
-        ><sl-icon name="cloud-plus-fill" slot="prefix" /> Add Data for a Patient
+        ><sl-icon name="stack" slot="prefix" /> Get a Patient
       </sl-button>
     </Link>
   </div>

@@ -2,11 +2,12 @@
   import axios from "axios";
   import { useNavigate } from "svelte-navigator";
   import { mongo } from "../service";
-  let ehrId;
   let number;
+  let alertBol = false;
   let data;
   let navigo = useNavigate();
   let display = 0;
+
   const handleSubmit = async () => {
     console.log(number);
     try {
@@ -18,10 +19,29 @@
         console.log(data);
       }
     } catch (e) {
-      console.log(e);
+      if (e.response.status == 404) {
+        alertBol = true;
+      }
     }
   };
 </script>
+
+<div class="absolute top-0 right-0">
+  {#if alertBol}
+    <sl-alert
+      type="warning"
+      open
+      closable
+      class="alert-closable text-center"
+      on:click={() => {
+        alertBol = false;
+      }}
+    >
+      <sl-icon slot="icon" name="exclamation-triangle" />
+      Patient Not Found
+    </sl-alert>
+  {/if}
+</div>
 
 <h1 class="font-sans text-6xl font-bold mb-10">
   Add a new Data to an existing Patient
