@@ -54,7 +54,6 @@
   // };
 
   onMount(async () => {
-    const r = mongo.get(`/`);
     let list;
     temp = await Vitals(ehrId);
     time = temp.rows?.map((x) => x[0].value);

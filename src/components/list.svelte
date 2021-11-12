@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+  import Fuse from "fuse.js";
   import { useNavigate } from "svelte-navigator";
   const navigate = useNavigate();
   import { onMount } from "svelte";
@@ -6,22 +8,35 @@
   import { fade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { mongo } from "../service";
+
   let patients = [];
-  let ifFil = [];
+
+  let fuseObj;
 
   onMount(async () => {
     const resp = await mongo.get("all");
-    patients = [...resp.data];
-    ifFil = [...resp.data];
+    patients = resp.data;
+
+    const options = {
+      includeScore: true,
+      useExtendedSearch: true,
+      keys: [
+        { name: "AdhaarNo", weight: 3 },
+        { name: "Name", weight: 2 },
+        { name: "Gender", weight: 1 },
+        { name: "PhoneNo", weight: 2 },
+      ],
+    };
+
+    fuseObj = new Fuse(patients, options);
   });
 
   const handleFilter = (value) => {
     if (value) {
-      patients = ifFil.filter((e) =>
-        e.AdhaarNo.toString().startsWith(value.toString())
-      );
+      patients = fuseObj.search(value).map((x) => x.item);
+      console.log(patients);
     } else {
-      patients = [...ifFil];
+      patients = fuseObj._docs;
     }
   };
 
@@ -32,7 +47,7 @@
   const handleDelete = async (id) => {
     const resp = await mongo.delete(`/delete?AdhaarNo=${id}`);
     const r = await mongo.get("all");
-    patients = [...r.data];
+    patients = r.data;
   };
 </script>
 
@@ -43,7 +58,7 @@
       class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
       for="inline-full-name"
     >
-      Aadhaar Card
+      Search
     </label>
   </div>
   <div>
@@ -51,7 +66,7 @@
       class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-gray-500 focus:border-gray-200 focus:text-gray-100"
       id="inline-full-name"
       type="text"
-      placeholder="XXXX XXXX XXXX XXXX"
+      placeholder="Entry Search Query"
       on:input={(e) => handleFilter(e.target?.value)}
     />
   </div>

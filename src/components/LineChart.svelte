@@ -77,7 +77,6 @@
   onMount(() => {
     const chartElement = element;
     ctx = chartElement.getContext("2d");
-    console.log(label);
     chart = new Chart(ctx, {
       type: "line",
       data: {

@@ -14,34 +14,11 @@
     }
 
     try {
-      const respEHR = await openehr.post(
-        "/ehr",
-        {
-          _type: "EHR_STATUS",
-          archetype_node_id: "openEHR-EHR-EHR_STATUS.generic.v1",
-          name: {
-            value: "ehr status",
-          },
-          subject: {
-            external_ref: {
-              id: {
-                _type: "GENERIC_ID",
-                value: patient["AdhaarNo"],
-                scheme: patient["Name"],
-              },
-              namespace: "EHR",
-              type: "PERSON",
-            },
-          },
-          is_modifiable: "true",
-          is_queryable: "true",
+      const respEHR = await openehr.post("/ehr", {
+        headers: {
+          Accept: "application/json",
         },
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      });
 
       if (respEHR.status === 204) {
         patient["ehrId"] = respEHR.headers["etag"].replace(/['"]+/g, "");
@@ -59,7 +36,6 @@
         }
       }
     } catch (e) {
-      console.log(e);
       if (String(e).includes("400")) {
         alert("Patient Already Exists");
       } else {

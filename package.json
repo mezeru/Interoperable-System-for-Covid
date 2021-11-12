@@ -27,6 +27,7 @@
     "@shoelace-style/shoelace": "^2.0.0-beta.51",
     "axios": "^0.21.1",
     "chart.js": "^3.6.0",
+    "fuse.js": "^6.4.6",
     "sass": "^1.39.0",
     "svelte-hmr": "^0.14.7",
     "svelte-routing": "^1.6.0"
