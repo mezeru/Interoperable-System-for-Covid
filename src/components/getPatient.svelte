@@ -150,6 +150,7 @@
     </div>
     <div class="flex justify-center items-center">
       <p
+        in:fade={{ duration: 2500 }}
         class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl {temp
           ?.rows[0]?.[1]?.value == 'YES'
           ? 'bg-yellow-500'
@@ -364,52 +365,46 @@
 
         <sl-tab-panel name="lab">
           <div class="flex flex-col gap-3 p-5">
-            {#if listLabs[0]?.[1]}
-              <h3 class="font-bold text-4xl mb-5 text-center">
-                Laboratory Tests
-              </h3>
-              {#each listLabs as test}
-                {#if test[1]}
-                  <div
-                    class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
-                  >
-                    <div class="grid grid-cols-2 justify-evenly">
-                      <p
-                        class="flex flex-col text-center font-bold text-3xl mb-5 text-white"
+            <h3 class="font-bold text-4xl mb-5 text-center">
+              Laboratory Tests
+            </h3>
+            {#each listLabs as test}
+              {#if test[1]}
+                <div
+                  class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
+                >
+                  <div class="grid grid-cols-2 justify-evenly">
+                    <p
+                      class="flex flex-col text-center font-bold text-3xl mb-5 text-white"
+                    >
+                      {test[1].value}
+                      <span class="font-normal text-base m-2 text-white"
+                        >{@html handleName(test[2], "Time")}</span
                       >
-                        {test[1].value}
-                        <span class="font-normal text-base m-2 text-white"
-                          >{handleName(test[2], "Time")}</span
-                        >
-                      </p>
-                      <div class="flex items-center justify-center">
-                        <p
-                          class="{test[3]?.value == 'Positive'
-                            ? 'bg-red-500'
-                            : test[3]?.value == 'Negative'
-                            ? 'bg-green-500'
-                            : 'bg-yellow-500'} px-5 py-3 text-3xl rounded-lg text-white"
-                        >
-                          {test[3]?.value}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="flex justify-evenly">
+                    </p>
+                    <div class="flex items-center justify-center">
                       <p
-                        class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 text-lg"
+                        class="{test[3]?.value == 'Positive'
+                          ? 'bg-red-500'
+                          : test[3]?.value == 'Negative'
+                          ? 'bg-green-500'
+                          : 'bg-yellow-500'} px-5 py-3 text-3xl rounded-lg text-white"
                       >
-                        {test[4] != null ? test[4].value : "No Comments"}
+                        {test[3]?.value}
                       </p>
                     </div>
                   </div>
-                  <br />
-                {/if}
-              {/each}
-            {:else}
-              <p class="font-bold text-3xl text-center p-5">
-                No Laboratory Tests for this Patient
-              </p>
-            {/if}
+                  <div class="flex justify-evenly">
+                    <p
+                      class="appearance-none w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 text-lg"
+                    >
+                      {test[4]?.value}
+                    </p>
+                  </div>
+                </div>
+                <br />
+              {/if}
+            {/each}
           </div>
         </sl-tab-panel>
 

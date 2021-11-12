@@ -7,7 +7,12 @@ export const formatAql = (aqlResultData): any => {
 
 
 export const Lab = async (ehrId :string) =>{
-  const query = `SELECT c/context/start_time/value as time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value as Test, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0075]/value as Test_time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0057]/value as Result, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value as Suggesition from EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value='${ehrId}' LIMIT 15 ORDER by time DESC
+  const query = `SELECT 
+  c/context/start_time/value as time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value as Test, 
+  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0075]/value as Test_time, 
+  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0057]/value as Result, 
+  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0098]/value as Suggesition 
+  from EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value='${ehrId}' LIMIT 15 ORDER by time DESC
   `;
 
   const r = await openehr.post(`/query/aql`, {
@@ -37,15 +42,32 @@ export const compositionsList = async (ehrId :string) =>{
     from EHR e CONTAINS COMPOSITION c
     WHERE e/ehr_id/value='${ehrId}'
     LIMIT 10
-    ORDER by Time ASC
-
+    ORDER by Time DESC
     `;
 
     const r = await openehr.post(`/query/aql`, {
       q: query,
     });
+    
     return formatAql(r.data);
   };
+
+  // export const arche = async (ehrId :string) => {
+  //   const query = `SELECT
+  //   c/context/start_time as Time,
+  //   o/data[at0001]/events[at0002]/data[at0003]/items[at0062]/value as Pulse_Presence,
+  //   o/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude as Pulse_Rate
+  //   from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.respiration.v2]
+  //   WHERE e/ehr_id/value='${ehrId}'
+  //   LIMIT 10
+  //   ORDER by Time ASC
+  //   `;
+
+  //   const r = await openehr.post(`/query/aql`, {
+  //     q: query,
+  //   });
+  //   return formatAql(r.data);
+  // };
 
   export const Travel = async (ehrId :string) => {
     const query = `SELECT

@@ -12,6 +12,7 @@
   import NavBar from "./components/nav.svelte";
   import Templates from "./components/Templates.svelte";
   import Assessment from "./components/Assessment.svelte";
+  import GetOne from "./components/GetOne.svelte";
 </script>
 
 <Router>
@@ -30,7 +31,9 @@
 
     <Route path="/assessment/:id/:ehrId/:name" component={Assessment} />
 
-    <Route path="/templates" component={Templates} />
+    <Route path="/getpatient" component={GetOne} />
+
+    <Route path="/Templates" component={Templates} />
 
     <Route>
       <Home />

@@ -80,10 +80,10 @@
     chart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: labels.map((x) => handleDate(x)),
+        labels: labels.map((x) => handleDate(x)).reverse(),
         datasets: [
           {
-            data: data,
+            data: data.reverse(),
             label,
             borderColor: color,
             backgroundColor: color,
