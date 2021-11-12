@@ -23,7 +23,11 @@ export const Lab = async (ehrId :string) =>{
 
 
 export const compositionsList = async (ehrId :string) =>{
-    const query = `SELECT c/context/start_time/value as time, c/uid/value as uid from EHR e CONTAINS COMPOSITION c where e/ehr_id/value='${ehrId}' LIMIT 15 ORDER BY time DESC
+    const query = `SELECT 
+    c/context/start_time/value as time, 
+    c/uid/value as uid,
+    c/archetype_details/template_id/value 
+    from EHR e CONTAINS COMPOSITION c where e/ehr_id/value='${ehrId}' LIMIT 15 ORDER BY time DESC
     `
     const r = await openehr.post(`/query/aql`, {
       q: query,

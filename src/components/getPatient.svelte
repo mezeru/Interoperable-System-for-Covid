@@ -6,6 +6,11 @@
   import LineChart from "./LineChart.svelte";
   import { mongo, openehr } from "../service";
 
+  const formLink = {
+    "assessment.form": "assessment-form",
+    "Opd_temp.v1": "postdata",
+  };
+
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
   let listComp = [];
@@ -421,7 +426,7 @@
             {#each listComp as comp}
               {#if comp[1]}
                 <div
-                  class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-900 text-gray-200 items-center"
+                  class="grid grid-cols-3 p-5 rounded-lg shadow-inner bg-gray-900 text-gray-200 items-center"
                 >
                   <div class="text-center text-lg font-semibold">
                     <sl-format-date
@@ -433,10 +438,16 @@
                       date={comp[0]}
                     />
                   </div>
+                  <div class="text-center text-lg font-semibold">
+                    <p>{comp[2]}</p>
+                  </div>
                   <div class="flex flex-row items-center justify-center">
                     <Link
                       class="text-center text-lg bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-500 hover:text-white font-semibold"
-                      to={`/postdata/${ehrId}/${comp[1].substring(0, 36)}`}
+                      to={`/${formLink[comp[2]]}/${ehrId}/${comp[1].substring(
+                        0,
+                        36
+                      )}`}
                     >
                       Edit Composition
                     </Link>
