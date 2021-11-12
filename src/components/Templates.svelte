@@ -7,7 +7,7 @@
 
   onMount(async () => {
     const r = await openehr.get("/definition/template/adl1.4");
-    templates = r.data;
+    templates = r.data.reverse();
   });
 
   const handleDate = (date) => {
@@ -36,7 +36,7 @@
           }
         );
         const resp = await openehr.get("/definition/template/adl1.4");
-        templates = resp.data;
+        templates = resp.data.reverse;
       } catch (e) {
         if (e.response.status == 409) {
           alert("Template Already Posted");
