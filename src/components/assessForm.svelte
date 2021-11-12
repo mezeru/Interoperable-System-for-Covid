@@ -45,7 +45,7 @@
 <mb-form
   bind:this={form}
   in:fade={{ duration: 1000 }}
-  class="flex flex-col gap-3 p-5 shadow-lg rounded-lg border"
+  class="flex flex-col gap-3 p-10 m-10 rounded-lg border"
   ref="formRef"
   on:mb-submit={handleSubmit}
 >

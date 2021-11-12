@@ -46,7 +46,7 @@
 </script>
 
 <form
-  class="flex-col gap-3 p-5 shadow-lg rounded-lg border"
+  class="flex-col gap-3 p-5 m-10 shadow-lg rounded-lg border"
   on:submit|preventDefault={handleSubmitDemo}
 >
   <div class="flex flex-wrap -mx-3 mb-6">

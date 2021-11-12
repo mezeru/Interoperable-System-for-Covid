@@ -86,7 +86,7 @@
     list = await Assessment(ehrId);
     assess = list.rows;
 
-    console.log(assess);
+    console.log(clinical);
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -167,7 +167,10 @@
   };
 </script>
 
-<div in:fly={{ y: 200, duration: 500 }} class="bg-white rounded-lg shadow-lg">
+<div
+  in:fly={{ y: 200, duration: 500 }}
+  class="m-5 bg-white rounded-lg shadow-lg"
+>
   <div
     class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
@@ -193,16 +196,9 @@
           navigate(`/postdata/${ehrId}/None`);
         }}
       >
-        <sl-icon name="plus-square-fill" slot="prefix" />Add Data
+        <sl-icon name="plus-square-fill" slot="prefix" />Add Clinical Data
       </sl-button>
-      <!-- <sl-button
-        type="success"
-        on:click|preventDefault={() => {
-          navigate(`/assessment/${id}/${ehrId}/${name}`);
-        }}
-      >
-        <sl-icon name="archive-fill" slot="prefix" />Assessment
-      </sl-button> -->
+
       <sl-button
         type="success"
         on:click|preventDefault={() => {
@@ -235,54 +231,46 @@
             <div
               class="flex flex-col gap-3 p-5 rounded-lg border justify-around"
             >
-              <p class="text-center">
-                <span class="font-bold">Symptoms</span>
-                <span
-                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {clinical[0] !=
-                  null
-                    ? 'bg-red-500'
-                    : 'bg-green-500'}"
-                  >{clinical[0] ? clinical[0][1]?.value : "N/A"}</span
-                >
-              </p>
-              <div class="flex flex-row gap-3 p-5 justify-evenly">
-                <p>
-                  <span class="font-bold">Screening Purpose</span> :
-                  <span
-                    >{temp.rows[0][7] != null
-                      ? temp.rows[0][7].value
-                      : "N/A"}</span
-                  >
+              <div class="flex flex-col gap-3 p-5">
+                <p class="font-semibold text-2xl text-center">
+                  Screening Purpose
                 </p>
-                <p>
-                  <span class="font-bold">Symptom Detail</span> :
-                  <span
-                    >{temp.rows[0][8] != null
-                      ? temp.rows[0][8].items[0].value.value
-                      : "N/A"}</span
-                  >
-                </p>
+                <div class="grid grid-cols-3">
+                  {#each clinical as Symptom}
+                    {#if Symptom[2] != null && Symptom[2] != "None"}
+                      <div class="p-2">
+                        <p
+                          class="text-2xl text-white border rounded text-center bg-red-600 py-2"
+                        >
+                          {Symptom[2]}
+                        </p>
+                      </div>
+                    {/if}
+                  {/each}
+                </div>
               </div>
             </div>
             <div
               class="flex flex-row gap-3 p-5 rounded-lg border justify-around items-center"
             >
-              <p>
-                <span class="font-bold">Present Conditions</span> :
-                <span
-                  >{temp.rows[0][9]?.value != null
-                    ? temp.rows[0][9].value
-                    : "N/A"}</span
-                >
-              </p>
-              <p>
-                <span class="font-bold">Specific Condition</span> :
-                <span
-                  >{temp.rows[0][10] != null
-                    ? temp.rows[0][10].items[0].value.value
-                    : "N/A"}</span
-                >
-              </p>
+              <div class="flex flex-col gap-3 p-5">
+                <p class="font-semibold text-2xl text-center">
+                  Present Conditions
+                </p>
+                <div class="grid grid-cols-1">
+                  {#each clinical as Symptom}
+                    {#if Symptom[4] != null && Symptom[4] != "None"}
+                      <div class="p-2">
+                        <p
+                          class="text-2xl text-white border rounded text-center bg-red-600 py-2"
+                        >
+                          {Symptom[4]}
+                        </p>
+                      </div>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
             </div>
           </div>
         </sl-tab-panel>

@@ -11,7 +11,6 @@
   import Patient from "./components/getPatient.svelte";
   import NavBar from "./components/nav.svelte";
   import Templates from "./components/Templates.svelte";
-  import Assessment from "./components/Assessment.svelte";
   import GetOne from "./components/GetOne.svelte";
   import AssessForm from "./components/assessForm.svelte";
 </script>
@@ -19,7 +18,7 @@
 <Router>
   <NavBar />
 
-  <main class="p-2 md:p-12 flex flex-col gap-5 h-full">
+  <main class="flex flex-col gap-5 h-full">
     <Route path="/new" component={New} />
 
     <Route path="/get" component={Get} />
@@ -29,8 +28,6 @@
     <Route path="/patient/:id/:ehrId/:name" component={Patient} />
 
     <Route path="/postdata/:ehrId/:compId" component={CompoForm} />
-
-    <Route path="/assessment/:id/:ehrId/:name" component={Assessment} />
 
     <Route path="/assessment-form/:ehrId/:compId" component={AssessForm} />
 
