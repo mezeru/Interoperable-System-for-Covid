@@ -168,13 +168,21 @@
       >
         <sl-icon name="plus-square-fill" slot="prefix" />Add Data
       </sl-button>
-      <sl-button
+      <!-- <sl-button
         type="success"
         on:click|preventDefault={() => {
           navigate(`/assessment/${id}/${ehrId}/${name}`);
         }}
       >
         <sl-icon name="archive-fill" slot="prefix" />Assessment
+      </sl-button> -->
+      <sl-button
+        type="success"
+        on:click|preventDefault={() => {
+          navigate(`/assessment-form/${ehrId}/None`);
+        }}
+      >
+        <sl-icon name="plus-square-fill" slot="prefix" />Add Assessment
       </sl-button>
     </div>
   </div>

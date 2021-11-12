@@ -13,6 +13,7 @@
   import Templates from "./components/Templates.svelte";
   import Assessment from "./components/Assessment.svelte";
   import GetOne from "./components/GetOne.svelte";
+  import AssessForm from "./components/assessForm.svelte";
 </script>
 
 <Router>
@@ -30,6 +31,8 @@
     <Route path="/postdata/:ehrId/:compId" component={CompoForm} />
 
     <Route path="/assessment/:id/:ehrId/:name" component={Assessment} />
+
+    <Route path="/assessment-form/:ehrId/:compId" component={AssessForm} />
 
     <Route path="/getpatient" component={GetOne} />
 
