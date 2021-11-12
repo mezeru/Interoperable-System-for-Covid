@@ -125,14 +125,23 @@
 
     switch (key) {
       case "Time":
-        return `<sl-format-date
+        return `<div>
+                <sl-format-date
                   day="numeric"
                   month="long"
+                  date=${row.value}
+                />
+              </div>
+              <div>       
+                <sl-format-date
                   hour="numeric"
                   minute="numeric"
                   hour-format="12"
                   date=${row.value}
-                />`;
+                />
+              </div>
+                
+                `;
 
       case "SpO2":
         return row.numerator + " %";
@@ -310,19 +319,7 @@
                   />
                 </div>
               </div>
-              <div class="w-1/3">
-                <p class="my-2 text-2xl text-center font-semibold">SpO2</p>
-                <div class="flex">
-                  <LineChart
-                    label="SpO2"
-                    labels={time}
-                    data={makeSp(temp)}
-                    min="0"
-                    max="100"
-                    color="rgb(204, 102, 255)"
-                  />
-                </div>
-              </div>
+
               <div class="w-1/3">
                 <p class="my-2 text-2xl text-center font-semibold">
                   Pulse Rate
@@ -335,6 +332,20 @@
                     min="50"
                     max="180"
                     color="rgb(51, 204, 51)"
+                  />
+                </div>
+              </div>
+
+              <div class="w-1/3">
+                <p class="my-2 text-2xl text-center font-semibold">SpO2</p>
+                <div class="flex">
+                  <LineChart
+                    label="SpO2"
+                    labels={time}
+                    data={makeSp(temp)}
+                    min="0"
+                    max="100"
+                    color="rgb(204, 102, 255)"
                   />
                 </div>
               </div>
