@@ -23,8 +23,6 @@
       keys: [
         { name: "AdhaarNo", weight: 3 },
         { name: "Name", weight: 2 },
-        { name: "Gender", weight: 1 },
-        { name: "PhoneNo", weight: 2 },
       ],
     };
 
