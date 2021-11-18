@@ -57,22 +57,6 @@ export const compositionsList = async (ehrId :string) =>{
     return formatAql(r.data);
   };
 
-  // export const arche = async (ehrId :string) => {
-  //   const query = `SELECT
-  //   c/context/start_time as Time,
-  //   o/data[at0001]/events[at0002]/data[at0003]/items[at0062]/value as Pulse_Presence,
-  //   o/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value/magnitude as Pulse_Rate
-  //   from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.respiration.v2]
-  //   WHERE e/ehr_id/value='${ehrId}'
-  //   LIMIT 10
-  //   ORDER by Time ASC
-  //   `;
-
-  //   const r = await openehr.post(`/query/aql`, {
-  //     q: query,
-  //   });
-  //   return formatAql(r.data);
-  // };
 
   export const Travel = async (ehrId :string) => {
     const query = `SELECT
