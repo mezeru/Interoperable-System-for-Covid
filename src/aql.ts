@@ -8,11 +8,12 @@ export const formatAql = (aqlResultData): any => {
 
 export const Lab = async (ehrId :string) =>{
   const query = `SELECT 
-  c/context/start_time/value as time, c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value as Test, 
-  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0075]/value as Test_time, 
-  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0057]/value as Result, 
-  c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Lab Testing']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0098]/value as Suggesition 
-  from EHR e CONTAINS COMPOSITION c WHERE e/ehr_id/value='${ehrId}' LIMIT 15 ORDER by time DESC
+  c/context/start_time/value as time, o/data[at0001]/events[at0002]/data[at0003]/items[at0005]/value as Test, 
+  o/data[at0001]/events[at0002]/data[at0003]/items[at0075]/value as Test_time, 
+  o/data[at0001]/events[at0002]/data[at0003]/items[at0057]/value as Result, 
+  o/data[at0001]/events[at0002]/data[at0003]/items[at0098]/value as Suggesition 
+  from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+  WHERE e/ehr_id/value='${ehrId}' LIMIT 15 ORDER by time DESC
   `;
 
   const r = await openehr.post(`/query/aql`, {
@@ -43,7 +44,7 @@ export const compositionsList = async (ehrId :string) =>{
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Vital Signs']/items[openEHR-EHR-OBSERVATION.respiration.v2]/data[at0001]/events[at0002]/data[at0003]/items[at0062]/value as Pulse_Presence,
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Vital Signs']/items[openEHR-EHR-OBSERVATION.respiration.v2]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value as Pulse_Rate,
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-SECTION.adhoc.v1,'Vital Signs']/items[openEHR-EHR-OBSERVATION.pulse_oximetry.v1]/data[at0001]/events[at0002]/data[at0003]/items[at0006]/value as SpO2
-    from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.respiration.v2]
+    from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o
     WHERE e/ehr_id/value='${ehrId}'
     LIMIT 10
     ORDER by Time DESC
@@ -76,9 +77,9 @@ export const compositionsList = async (ehrId :string) =>{
   export const Travel = async (ehrId :string) => {
     const query = `SELECT
     c/context/start_time as Time,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value as Travel,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.travel_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0026]/value as DomInter
-    from EHR e CONTAINS COMPOSITION c
+    o/data[at0001]/events[at0002]/data[at0003]/items[at0004]/value as Travel,
+    o/data[at0001]/events[at0002]/data[at0003]/items[at0026]/value as DomInter
+    from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.travel_screening.v0]
     WHERE e/ehr_id/value='${ehrId}'
     ORDER by Time DESC
     `
@@ -91,11 +92,11 @@ export const compositionsList = async (ehrId :string) =>{
   export const Assessment = async (ehrId :string) => {
     const query = `SELECT
     c/context/start_time/value as Time,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0013.1]/value/value as RiskFactor,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0017.1]/value/value as Presence,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0016]/items[at0029]/value/value as date,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Assessment']/items[openEHR-EHR-EVALUATION.health_risk-covid.v0]/data[at0001]/items[at0003.1]/value/value as RiskAssess
-    from EHR e CONTAINS COMPOSITION c
+    ev/data[at0001]/items[at0016]/items[at0013.1]/value/value as RiskFactor,
+    ev/data[at0001]/items[at0016]/items[at0017.1]/value/value as Presence,
+    ev/data[at0001]/items[at0016]/items[at0029]/value/value as date,
+    ev/data[at0001]/items[at0003.1]/value/value as RiskAssess
+    from EHR e CONTAINS COMPOSITION c CONTAINS EVALUATION ev [openEHR-EHR-EVALUATION.health_risk-covid.v0]
     WHERE e/ehr_id/value='${ehrId}'
     ORDER by Time DESC
     `
@@ -108,10 +109,10 @@ export const compositionsList = async (ehrId :string) =>{
   export const Clinical = async (ehrId :string) => {
     const query = `SELECT
     c/context/start_time as Time,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value/value as Symptoms,
-    c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0034]/value/value as Screening_Purpose,
+    o/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value/value as Symptoms,
+    o/data[at0001]/events[at0002]/data[at0003]/items[at0034]/value/value as Screening_Purpose,
     c/content[openEHR-EHR-SECTION.adhoc.v1,'Clinical Background']/items[openEHR-EHR-OBSERVATION.condition_screening.v0]/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value as Presenting_conditions
-    from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o[openEHR-EHR-OBSERVATION.condition_screening.v0]
+    from EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION o [openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]
     WHERE e/ehr_id/value='${ehrId}'
     ORDER by Time DESC
     `;
