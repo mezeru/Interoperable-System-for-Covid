@@ -6,12 +6,15 @@
     Clinical,
     Travel,
     Assessment,
+    Diagnosis,
   } from "../aql";
   import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import LineChart from "./LineChart.svelte";
   import { mongo, openehr } from "../service";
+
+  const navigate = useNavigate();
 
   const formLink = {
     "assessment.form": "assessment-form",
@@ -25,11 +28,12 @@
   let clinical = [];
   let travel = [];
   let assess = [];
-  const navigate = useNavigate();
+  let diag = [];
+  let time = [];
+
   export let ehrId;
   export let id;
   export let name;
-  let time = [];
 
   let table = new Set([
     "Time",
@@ -86,7 +90,10 @@
     list = await Assessment(ehrId);
     assess = list.rows;
 
-    console.log(clinical);
+    list = await Diagnosis(ehrId);
+    diag = list.rows;
+
+    console.log(diag);
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -223,6 +230,7 @@
         <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
         <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
         <sl-tab slot="nav" panel="assessment">Assessments</sl-tab>
+        <sl-tab slot="nav" panel="conclusion">Conclusions</sl-tab>
         <sl-tab slot="nav" panel="Compositions">Compositions Posted</sl-tab>
 
         <sl-tab-panel name="clinical">
@@ -397,7 +405,7 @@
             {#each listLabs as test}
               {#if test[1]}
                 <div
-                  class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
+                  class="p-5 rounded-lg flex flex-col shadow-inner bg-gray-800"
                 >
                   <div class="grid grid-cols-2 justify-evenly">
                     <p
@@ -469,6 +477,53 @@
                     </div>
                   </div>
                 </div>
+              {/if}
+            {/each}
+          </div>
+        </sl-tab-panel>
+
+        <sl-tab-panel name="conclusion">
+          <div class="flex flex-col gap-3 p-5">
+            {#each diag as test}
+              {#if test[1]}
+                <div
+                  class="p-5 rounded-lg flex flex-col shadow-inner bg-gray-800"
+                >
+                  <div class="grid grid-cols-3 justify-evenly">
+                    <p class="flex flex-col text-center mb-5 text-white">
+                      <span class="text-3xl font-bold m-2">
+                        {test[1]?.value}
+                      </span>
+                      <span class="text-base m-2"
+                        >{@html handleName(test[4], "Time")}</span
+                      >
+                    </p>
+                    <div class="flex items-center justify-center">
+                      <p
+                        class="{test[3]?.value == 'Severe'
+                          ? 'bg-red-500'
+                          : test[3]?.value == 'Mild'
+                          ? 'bg-green-500'
+                          : 'bg-yellow-500'} px-4 py-2 text-3xl rounded-lg text-white"
+                      >
+                        {test[3]?.value}
+                      </p>
+                    </div>
+                    <div
+                      class="flex flex-col mb-5 text-white items-center justify-center"
+                    >
+                      <p class="text-center text-2xl">
+                        {test[2]}
+                      </p>
+                    </div>
+                  </div>
+                  <p
+                    class=" bg-gray-100 text-gray-700 border text-xl border-gray-200 rounded px-4 py-2"
+                  >
+                    {test[6]?.value}
+                  </p>
+                </div>
+                <br />
               {/if}
             {/each}
           </div>

@@ -141,10 +141,7 @@
           path="assessment.form/conclusion/problem_diagnosis/clinical_description"
           label="Clinical description"
         />
-        <mb-input
-          path="assessment.form/conclusion/problem_diagnosis/body_site:0"
-          label="Body site"
-        />
+
         <mb-select
           path="assessment.form/conclusion/problem_diagnosis/severity"
           label="Severity"
@@ -153,10 +150,7 @@
           <mb-option value="at0048" label="Moderate" />
           <mb-option value="at0049" label="Severe" />
         </mb-select>
-        <mb-input
-          path="assessment.form/conclusion/problem_diagnosis/course_description"
-          label="Course description"
-        />
+
         <mb-date
           time
           path="assessment.form/conclusion/problem_diagnosis/date_time_of_resolution"
@@ -174,11 +168,7 @@
           path="assessment.form/conclusion/problem_diagnosis/comment"
           label="Comment"
         />
-        <mb-date
-          time
-          path="assessment.form/conclusion/problem_diagnosis/last_updated"
-          label="Last updated"
-        />
+
         <mb-context
           path="assessment.form/conclusion/problem_diagnosis/language"
         />
