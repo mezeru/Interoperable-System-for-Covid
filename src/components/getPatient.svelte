@@ -55,21 +55,6 @@
     return temp.rows?.map((x) => x[4]?.magnitude);
   };
 
-  // const labelsMap = {
-  //   Temperature: 2,
-  // };
-
-  // const handleLabels = (name, row) => {
-  //   let pos = labelsMap[name];
-  //   let labels = [];
-  //   row.forEach((col) => {
-  //     if (col[pos] != null) {
-  //       labels.push(col[0]);
-  //     }
-  //   });
-  //   return labels;
-  // };
-
   onMount(async () => {
     let list;
     temp = await Vitals(ehrId);
@@ -92,8 +77,6 @@
 
     list = await Diagnosis(ehrId);
     diag = list.rows;
-
-    console.log(diag);
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
