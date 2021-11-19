@@ -2,7 +2,6 @@
   import { mongo, openehr } from "../service";
   import { useNavigate } from "svelte-navigator";
   let ehrId;
-
   const navigo = useNavigate();
 
   const handleSubmitDemo = async (e) => {
@@ -101,6 +100,8 @@
       <input
         required
         placeholder="XXXX XXXX XXXX"
+        max="1000000000000"
+        min="100000000000"
         type="number"
         id="AdhaarNo"
         name="AdhaarNo"
@@ -119,6 +120,8 @@
       </label>
       <input
         required
+        max="9999999999"
+        min="1000000000"
         placeholder="0123456789"
         type="number"
         id="phno"
