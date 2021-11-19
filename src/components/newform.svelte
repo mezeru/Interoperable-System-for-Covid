@@ -14,11 +14,34 @@
     }
 
     try {
-      const respEHR = await openehr.post("/ehr", {
-        headers: {
-          Accept: "application/json",
+      const respEHR = await openehr.post(
+        "/ehr",
+        {
+          _type: "EHR_STATUS",
+          archetype_node_id: "openEHR-EHR-EHR_STATUS.generic.v1",
+          name: {
+            value: "EHR Status",
+          },
+          subject: {
+            external_ref: {
+              id: {
+                _type: "GENERIC_ID",
+                value: patient.AdhaarNo << 2,
+                scheme: "id_scheme",
+              },
+              namespace: "examples",
+              type: "PERSON",
+            },
+          },
+          is_modifiable: true,
+          is_queryable: true,
         },
-      });
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
 
       if (respEHR.status === 204) {
         patient["ehrId"] = respEHR.headers["etag"].replace(/['"]+/g, "");
@@ -29,15 +52,15 @@
           const resp = await mongo.post(`new`, patient);
 
           if (resp.status == 200) {
-            navigo(`/patient/${patient.AdhaarNo}/${ehrId}`);
+            navigo(`/patient/${patient.AdhaarNo}/${ehrId}/${patient.Name}`);
           }
         } catch (e) {
           console.log(e);
         }
       }
     } catch (e) {
-      if (String(e).includes("400")) {
-        alert("Patient Already Exists");
+      if (e.response.status == 400) {
+        alert(e);
       } else {
         alert("Server is Down");
       }

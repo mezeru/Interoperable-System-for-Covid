@@ -162,7 +162,7 @@
   class="m-5 bg-white rounded-lg shadow-lg"
 >
   <div
-    class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
+    class="grid grid-cols-3 gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
     <div class="grid grid-cols-1 justify-center items-center">
       <p class="text-2xl text-white">{id}</p>
@@ -179,24 +179,26 @@
         {temp?.rows[0]?.[1]?.value == "YES" ? "Admitted" : "Not Admitted"}
       </p>
     </div>
-    <div class="grid grid-cols-1 gap-5 justify-center items-center">
-      <sl-button
-        type="primary"
-        on:click|preventDefault={() => {
-          navigate(`/postdata/${ehrId}/None`);
-        }}
-      >
-        <sl-icon name="plus-square-fill" slot="prefix" />Add Clinical Data
-      </sl-button>
+    <div class="flex justify-end items-center">
+      <div class="grid grid-rows-2 gap-5">
+        <sl-button
+          type="primary"
+          on:click|preventDefault={() => {
+            navigate(`/postdata/${ehrId}/None`);
+          }}
+        >
+          <sl-icon name="plus-square-fill" slot="prefix" />Add Clinical Data
+        </sl-button>
 
-      <sl-button
-        type="success"
-        on:click|preventDefault={() => {
-          navigate(`/assessment-form/${ehrId}/None`);
-        }}
-      >
-        <sl-icon name="plus-square-fill" slot="prefix" />Add Assessment
-      </sl-button>
+        <sl-button
+          type="success"
+          on:click|preventDefault={() => {
+            navigate(`/assessment-form/${ehrId}/None`);
+          }}
+        >
+          <sl-icon name="plus-square-fill" slot="prefix" />Add Assessment
+        </sl-button>
+      </div>
     </div>
   </div>
 
