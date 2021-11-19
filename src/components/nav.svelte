@@ -16,6 +16,11 @@
           ><sl-icon name="house-door-fill" slot="prefix" /> Home
         </sl-button>
       </Link>
+      <Link to="/Templates">
+        <sl-button type="neutral" size="medium"
+          ><sl-icon name="file-code-fill" slot="prefix" /> Templates
+        </sl-button>
+      </Link>
       <sl-button type="neutral" outline size="medium" on:click={handleBack}
         ><sl-icon name="arrow-left-square-fill" slot="prefix" /> Back
       </sl-button>

@@ -53,7 +53,7 @@
 <div class="flex items-center justify-center">
   <div>
     <label
-      class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+      class="block text-2xl text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
       for="inline-full-name"
     >
       Search
@@ -81,7 +81,9 @@
           class="flex text-3xl font-bold mb-2 justify-center items-center text-gray-50
           "
         >
-          {patient.Name}
+          <p class="text-center">
+            {patient.Name}
+          </p>
         </div>
         <div class="flex justify-center items-center">
           <p class="text-gray-300 text-white font-bold text-xl">
@@ -89,12 +91,16 @@
           </p>
         </div>
 
-        <p class="text-gray-300 text-base flex flex-col">
+        <p
+          class="text-gray-300 text-base flex flex-col items-center justify-center"
+        >
           <span class="font-bold">Aadhaar Number</span><span
             >{patient.AdhaarNo}</span
           >
         </p>
-        <p class="text-gray-300 text-base flex flex-col">
+        <p
+          class="text-gray-300 text-base flex flex-col items-center justify-center"
+        >
           <span class="font-bold">Phone number</span>
           <span>{patient.PhoneNo}</span>
         </p>

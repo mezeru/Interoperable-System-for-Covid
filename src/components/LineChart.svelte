@@ -61,7 +61,7 @@
       hour: "numeric",
       minute: "numeric",
       hourCycle: "h12",
-    }).format(new Date(value.replace("Etc/UTC", "Z")));
+    }).format(new Date(value.replace("Etc/UTC")));
   };
 
   import { onMount } from "svelte";
@@ -114,4 +114,4 @@
   });
 </script>
 
-<canvas bind:this={element} width="100px" height="75px" />
+<canvas bind:this={element} width="200px" height="150px" />

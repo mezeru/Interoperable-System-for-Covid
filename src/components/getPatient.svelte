@@ -1,10 +1,25 @@
 <script lang="ts">
-  import { Vitals, compositionsList, Lab, Clinical, Travel } from "../aql";
+  import {
+    Vitals,
+    compositionsList,
+    Lab,
+    Clinical,
+    Travel,
+    Assessment,
+    Diagnosis,
+  } from "../aql";
   import { useNavigate, Link } from "svelte-navigator";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import LineChart from "./LineChart.svelte";
   import { mongo, openehr } from "../service";
+
+  const navigate = useNavigate();
+
+  const formLink = {
+    "assessment.form": "assessment-form",
+    "Opd_temp.v1": "postdata",
+  };
 
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
@@ -12,11 +27,13 @@
   let listLabs = [];
   let clinical = [];
   let travel = [];
-  const navigate = useNavigate();
+  let assess = [];
+  let diag = [];
+  let time = [];
+
   export let ehrId;
   export let id;
   export let name;
-  let time = [];
 
   let table = new Set([
     "Time",
@@ -38,21 +55,6 @@
     return temp.rows?.map((x) => x[4]?.magnitude);
   };
 
-  // const labelsMap = {
-  //   Temperature: 2,
-  // };
-
-  // const handleLabels = (name, row) => {
-  //   let pos = labelsMap[name];
-  //   let labels = [];
-  //   row.forEach((col) => {
-  //     if (col[pos] != null) {
-  //       labels.push(col[0]);
-  //     }
-  //   });
-  //   return labels;
-  // };
-
   onMount(async () => {
     let list;
     temp = await Vitals(ehrId);
@@ -69,6 +71,12 @@
 
     list = await Travel(ehrId);
     travel = list.rows;
+
+    list = await Assessment(ehrId);
+    assess = list.rows;
+
+    list = await Diagnosis(ehrId);
+    diag = list.rows;
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -120,14 +128,23 @@
 
     switch (key) {
       case "Time":
-        return `<sl-format-date
+        return `<div>
+                <sl-format-date
                   day="numeric"
                   month="long"
+                  date=${row.value}
+                />
+              </div>
+              <div>       
+                <sl-format-date
                   hour="numeric"
                   minute="numeric"
                   hour-format="12"
                   date=${row.value}
-                />`;
+                />
+              </div>
+                
+                `;
 
       case "SpO2":
         return row.numerator + " %";
@@ -140,9 +157,12 @@
   };
 </script>
 
-<div in:fly={{ y: 200, duration: 500 }} class="bg-white rounded-lg shadow-lg">
+<div
+  in:fly={{ y: 200, duration: 500 }}
+  class="m-5 bg-white rounded-lg shadow-lg"
+>
   <div
-    class="flex flex-row gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
+    class="grid grid-cols-3 gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
     <div class="grid grid-cols-1 justify-center items-center">
       <p class="text-2xl text-white">{id}</p>
@@ -159,23 +179,26 @@
         {temp?.rows[0]?.[1]?.value == "YES" ? "Admitted" : "Not Admitted"}
       </p>
     </div>
-    <div class="grid grid-cols-1 gap-5 justify-center items-center">
-      <sl-button
-        type="primary"
-        on:click|preventDefault={() => {
-          navigate(`/postdata/${ehrId}/None`);
-        }}
-      >
-        <sl-icon name="plus-square-fill" slot="prefix" />Add Data
-      </sl-button>
-      <sl-button
-        type="success"
-        on:click|preventDefault={() => {
-          navigate(`/assessment/${id}/${ehrId}/${name}`);
-        }}
-      >
-        <sl-icon name="archive-fill" slot="prefix" />Assessment
-      </sl-button>
+    <div class="flex justify-end items-center">
+      <div class="grid grid-rows-2 gap-5">
+        <sl-button
+          type="primary"
+          on:click|preventDefault={() => {
+            navigate(`/postdata/${ehrId}/None`);
+          }}
+        >
+          <sl-icon name="plus-square-fill" slot="prefix" />Add Clinical Data
+        </sl-button>
+
+        <sl-button
+          type="success"
+          on:click|preventDefault={() => {
+            navigate(`/assessment-form/${ehrId}/None`);
+          }}
+        >
+          <sl-icon name="plus-square-fill" slot="prefix" />Add Assessment
+        </sl-button>
+      </div>
     </div>
   </div>
 
@@ -191,6 +214,8 @@
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
         <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
         <sl-tab slot="nav" panel="lab">Laboratory Tests</sl-tab>
+        <sl-tab slot="nav" panel="assessment">Assessments</sl-tab>
+        <sl-tab slot="nav" panel="conclusion">Conclusions</sl-tab>
         <sl-tab slot="nav" panel="Compositions">Compositions Posted</sl-tab>
 
         <sl-tab-panel name="clinical">
@@ -199,54 +224,46 @@
             <div
               class="flex flex-col gap-3 p-5 rounded-lg border justify-around"
             >
-              <p class="text-center">
-                <span class="font-bold">Symptoms</span>
-                <span
-                  class="px-10 py-2 m-5 text-white font-bold border rounded text-center {clinical[0] !=
-                  null
-                    ? 'bg-red-500'
-                    : 'bg-green-500'}"
-                  >{clinical[0] ? clinical[0][1]?.value : "N/A"}</span
-                >
-              </p>
-              <div class="flex flex-row gap-3 p-5 justify-evenly">
-                <p>
-                  <span class="font-bold">Screening Purpose</span> :
-                  <span
-                    >{temp.rows[0][7] != null
-                      ? temp.rows[0][7].value
-                      : "N/A"}</span
-                  >
+              <div class="flex flex-col gap-3 p-5">
+                <p class="font-semibold text-2xl text-center">
+                  Screening Purpose
                 </p>
-                <p>
-                  <span class="font-bold">Symptom Detail</span> :
-                  <span
-                    >{temp.rows[0][8] != null
-                      ? temp.rows[0][8].items[0].value.value
-                      : "N/A"}</span
-                  >
-                </p>
+                <div class="grid grid-cols-3">
+                  {#each clinical as Symptom}
+                    {#if Symptom[2] != null && Symptom[2] != "None"}
+                      <div class="p-2">
+                        <p
+                          class="text-2xl text-white border rounded text-center bg-red-600 py-2"
+                        >
+                          {Symptom[2]}
+                        </p>
+                      </div>
+                    {/if}
+                  {/each}
+                </div>
               </div>
             </div>
             <div
               class="flex flex-row gap-3 p-5 rounded-lg border justify-around items-center"
             >
-              <p>
-                <span class="font-bold">Present Conditions</span> :
-                <span
-                  >{temp.rows[0][9]?.value != null
-                    ? temp.rows[0][9].value
-                    : "N/A"}</span
-                >
-              </p>
-              <p>
-                <span class="font-bold">Specific Condition</span> :
-                <span
-                  >{temp.rows[0][10] != null
-                    ? temp.rows[0][10].items[0].value.value
-                    : "N/A"}</span
-                >
-              </p>
+              <div class="flex flex-col gap-3 p-5">
+                <p class="font-semibold text-2xl text-center">
+                  Present Conditions
+                </p>
+                <div class="grid grid-cols-1">
+                  {#each clinical as Symptom}
+                    {#if Symptom[4] != null && Symptom[4] != "None"}
+                      <div class="p-2">
+                        <p
+                          class="text-2xl text-white border rounded text-center bg-red-600 py-2"
+                        >
+                          {Symptom[4]}
+                        </p>
+                      </div>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
             </div>
           </div>
         </sl-tab-panel>
@@ -297,19 +314,7 @@
                   />
                 </div>
               </div>
-              <div class="w-1/3">
-                <p class="my-2 text-2xl text-center font-semibold">SpO2</p>
-                <div class="flex">
-                  <LineChart
-                    label="SpO2"
-                    labels={time}
-                    data={makeSp(temp)}
-                    min="0"
-                    max="100"
-                    color="rgb(204, 102, 255)"
-                  />
-                </div>
-              </div>
+
               <div class="w-1/3">
                 <p class="my-2 text-2xl text-center font-semibold">
                   Pulse Rate
@@ -322,6 +327,20 @@
                     min="50"
                     max="180"
                     color="rgb(51, 204, 51)"
+                  />
+                </div>
+              </div>
+
+              <div class="w-1/3">
+                <p class="my-2 text-2xl text-center font-semibold">SpO2</p>
+                <div class="flex">
+                  <LineChart
+                    label="SpO2"
+                    labels={time}
+                    data={makeSp(temp)}
+                    min="0"
+                    max="100"
+                    color="rgb(204, 102, 255)"
                   />
                 </div>
               </div>
@@ -371,7 +390,7 @@
             {#each listLabs as test}
               {#if test[1]}
                 <div
-                  class="p-5 rounded-lg grid grid-rows-2 shadow-inner bg-gray-800"
+                  class="p-5 rounded-lg flex flex-col shadow-inner bg-gray-800"
                 >
                   <div class="grid grid-cols-2 justify-evenly">
                     <p
@@ -408,12 +427,99 @@
           </div>
         </sl-tab-panel>
 
+        <sl-tab-panel name="assessment">
+          <div class="flex flex-col gap-3 p-5">
+            {#each assess as asses, i}
+              {#if asses[1]}
+                <div
+                  class="rounded-lg shadow-inner bg-gray-900 text-gray-200 p-5"
+                >
+                  <p class="text-3xl text-center font-bold">Assessment {++i}</p>
+                  <div class="grid grid-cols-3 p-2 items-center">
+                    <div class="text-center text-xl font-semibold">
+                      <div>
+                        <sl-format-date
+                          month="long"
+                          day="numeric"
+                          hour-format="12"
+                          date={asses[3]}
+                        />
+                      </div>
+                      <div>
+                        <sl-format-date
+                          hour="numeric"
+                          minute="numeric"
+                          hour-format="12"
+                          date={asses[3]}
+                        />
+                      </div>
+                    </div>
+                    <div class="text-center text-xl font-semibold">
+                      <p>{asses[1]}</p>
+                    </div>
+                    <div>
+                      <p class="text-center text-lg">{asses[4]}</p>
+                    </div>
+                  </div>
+                </div>
+              {/if}
+            {/each}
+          </div>
+        </sl-tab-panel>
+
+        <sl-tab-panel name="conclusion">
+          <div class="flex flex-col gap-3 p-5">
+            {#each diag as test}
+              {#if test[1]}
+                <div
+                  class="p-5 rounded-lg flex flex-col shadow-inner bg-gray-800"
+                >
+                  <div class="grid grid-cols-3 justify-evenly">
+                    <p class="flex flex-col text-center mb-5 text-white">
+                      <span class="text-3xl font-bold m-2">
+                        {test[1]?.value}
+                      </span>
+                      <span class="text-base m-2"
+                        >{@html handleName(test[4], "Time")}</span
+                      >
+                    </p>
+                    <div class="flex items-center justify-center">
+                      <p
+                        class="{test[3]?.value == 'Severe'
+                          ? 'bg-red-500'
+                          : test[3]?.value == 'Mild'
+                          ? 'bg-green-500'
+                          : 'bg-yellow-500'} px-4 py-2 text-3xl rounded-lg text-white"
+                      >
+                        {test[3]?.value}
+                      </p>
+                    </div>
+                    <div
+                      class="flex flex-col mb-5 text-white items-center justify-center"
+                    >
+                      <p class="text-center text-2xl">
+                        {test[2]}
+                      </p>
+                    </div>
+                  </div>
+                  <p
+                    class=" bg-gray-100 text-gray-700 border text-xl border-gray-200 rounded px-4 py-2"
+                  >
+                    {test[6]?.value}
+                  </p>
+                </div>
+                <br />
+              {/if}
+            {/each}
+          </div>
+        </sl-tab-panel>
+
         <sl-tab-panel name="Compositions">
           <div class="flex flex-col gap-3 p-5">
             {#each listComp as comp}
               {#if comp[1]}
                 <div
-                  class="grid grid-cols-2 p-5 rounded-lg shadow-inner bg-gray-900 text-gray-200 items-center"
+                  class="grid grid-cols-3 p-5 rounded-lg shadow-inner bg-gray-900 text-gray-200 items-center"
                 >
                   <div class="text-center text-lg font-semibold">
                     <sl-format-date
@@ -425,10 +531,16 @@
                       date={comp[0]}
                     />
                   </div>
+                  <div class="text-center text-lg font-semibold">
+                    <p>{comp[2]}</p>
+                  </div>
                   <div class="flex flex-row items-center justify-center">
                     <Link
                       class="text-center text-lg bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-500 hover:text-white font-semibold"
-                      to={`/postdata/${ehrId}/${comp[1].substring(0, 36)}`}
+                      to={`/${formLink[comp[2]]}/${ehrId}/${comp[1].substring(
+                        0,
+                        36
+                      )}`}
                     >
                       Edit Composition
                     </Link>
