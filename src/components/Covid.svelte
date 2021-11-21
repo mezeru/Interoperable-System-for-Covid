@@ -8,6 +8,7 @@
   export let ehrId;
   export let compId = null;
   let form;
+  let loading;
 
   let navigo = useNavigate();
 
@@ -26,6 +27,7 @@
 
   const templateId = "Opd_temp.v1";
   const handleSubmit = (e) => {
+    loading = "loading";
     console.log(e.detail);
     ehrscape
       .post("/composition", e.detail, {
@@ -39,6 +41,7 @@
       .catch((err) => {
         alert(err);
       });
+    loading = "";
   };
 </script>
 
@@ -420,6 +423,6 @@
   <mb-context path="opd_temp.v1/territory" />
   <mb-context path="opd_temp.v1/composer" />
   <mb-submit>
-    <sl-button type="neutral">Submit</sl-button>
+    <sl-button type="neutral" {loading}>Submit</sl-button>
   </mb-submit>
 </mb-form>

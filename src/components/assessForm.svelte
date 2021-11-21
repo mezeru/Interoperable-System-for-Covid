@@ -7,6 +7,7 @@
   export let ehrId;
   export let compId = null;
   let form;
+  let loading;
 
   let navigo = useNavigate();
 
@@ -185,6 +186,12 @@
     <mb-context path="assessment.form/language" />
   </sl-tab-group>
   <mb-submit>
-    <sl-button type="neutral">Submit</sl-button>
+    <sl-button
+      type="neutral"
+      {loading}
+      on:click={() => {
+        loading = "loading";
+      }}>Submit</sl-button
+    >
   </mb-submit>
 </mb-form>

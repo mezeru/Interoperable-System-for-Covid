@@ -446,7 +446,6 @@
                 <div
                   class="rounded-lg shadow-inner bg-gray-900 text-gray-200 p-5"
                 >
-                  <p class="text-3xl text-center font-bold">Assessment {++i}</p>
                   <div class="grid grid-cols-3 p-2 items-center">
                     <div class="text-center text-xl font-semibold">
                       <div>
