@@ -77,7 +77,7 @@
 <div class="px-10">
   {#if loading}
     <div class="flex items-center justify-center">
-      <img width="350" src="../assets/loading1.svg" alt="List Loading" />
+      <img width="350" src="../../assets/loading1.svg" alt="List Loading" />
     </div>
   {/if}
   {#each patients as patient}
