@@ -26,6 +26,7 @@
 
   const templateId = "assessment.form";
   const handleSubmit = (e) => {
+    loading = "loading";
     console.log(e.detail);
     ehrscape
       .post("/composition", e.detail, {
@@ -39,6 +40,7 @@
       .catch((err) => {
         alert(err);
       });
+    loading = "";
   };
 </script>
 
@@ -186,12 +188,6 @@
     <mb-context path="assessment.form/language" />
   </sl-tab-group>
   <mb-submit>
-    <sl-button
-      type="neutral"
-      {loading}
-      on:click={() => {
-        loading = "loading";
-      }}>Submit</sl-button
-    >
+    <sl-button type="neutral" {loading}>Submit</sl-button>
   </mb-submit>
 </mb-form>
