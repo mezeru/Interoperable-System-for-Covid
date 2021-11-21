@@ -8,6 +8,7 @@
   import { fade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { mongo } from "../service";
+  import loading1 from "../../assets/loading1.svg";
 
   let patients = [];
   let loading = true;
@@ -77,7 +78,7 @@
 <div class="px-10">
   {#if loading}
     <div class="flex items-center justify-center">
-      <img width="350" src="../../assets/loading1.svg" alt="List Loading" />
+      <img src={loading1} alt="loading" />
     </div>
   {/if}
   {#each patients as patient}
