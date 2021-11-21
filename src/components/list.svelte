@@ -10,7 +10,7 @@
   import { mongo } from "../service";
 
   let patients = [];
-
+  let loading = true;
   let fuseObj;
 
   onMount(async () => {
@@ -27,6 +27,7 @@
     };
 
     fuseObj = new Fuse(patients, options);
+    loading = false;
   });
 
   const handleFilter = (value) => {
@@ -43,9 +44,12 @@
   };
 
   const handleDelete = async (id) => {
+    loading = true;
+    patients = [];
     const resp = await mongo.delete(`/delete?AdhaarNo=${id}`);
     const r = await mongo.get("all");
     patients = r.data;
+    loading = false;
   };
 </script>
 
@@ -71,6 +75,11 @@
 </div>
 
 <div class="px-10">
+  {#if loading}
+    <div class="flex items-center justify-center">
+      <img width="350" src="../assets/loading1.svg" alt="List Loading" />
+    </div>
+  {/if}
   {#each patients as patient}
     <div
       in:fly={{ y: 1000, duration: 500, easing: quintOut }}

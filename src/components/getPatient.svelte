@@ -31,6 +31,8 @@
   let diag = [];
   let time = [];
 
+  let loading = true;
+
   export let ehrId;
   export let id;
   export let name;
@@ -77,6 +79,8 @@
 
     list = await Diagnosis(ehrId);
     diag = list.rows;
+
+    loading = false;
 
     try {
       await openehr.get(`/ehr/${ehrId}`, {
@@ -208,7 +212,11 @@
       duration: 2500,
     }}
   >
-    {#if temp?.rows.length >= 1}
+    {#if loading}
+      <div class="flex items-center justify-center">
+        <img src="../../../assets/loading2.svg" alt="Kiwi standing on oval" />
+      </div>
+    {:else if temp?.rows.length >= 1}
       <sl-tab-group>
         <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>

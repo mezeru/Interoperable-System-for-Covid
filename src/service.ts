@@ -12,4 +12,4 @@ headers: {
     },
   });
 
-  export const mongo = axios.create({baseURL:"http://localhost:5000/"});
+  export const mongo = axios.create({baseURL:"https://covidbackend.azurewebsites.net/"});

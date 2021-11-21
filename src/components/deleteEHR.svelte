@@ -1,6 +1,6 @@
 <script>
   import axios from "axios";
-  import { mongo } from "src/service";
+  import { mongo } from "../service";
   let number;
   const handleSubmit = async () => {
     console.log(number);
