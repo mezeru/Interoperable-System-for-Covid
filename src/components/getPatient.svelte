@@ -12,6 +12,7 @@
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import LineChart from "./LineChart.svelte";
+  import loading2 from "../../assets/loading2.svg";
   import { mongo, openehr } from "../service";
 
   const navigate = useNavigate();
@@ -172,16 +173,19 @@
       <p class="text-2xl text-white">{id}</p>
       <p class="font-bold text-4xl text-white">{name}</p>
     </div>
+
     <div class="flex justify-center items-center">
-      <p
-        in:fade={{ duration: 1500 }}
-        class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl blinkDiv {temp
-          ?.rows[0]?.[1]?.value == 'YES'
-          ? 'bg-yellow-500'
-          : 'bg-green-500'}"
-      >
-        {temp?.rows[0]?.[1]?.value == "YES" ? "Admitted" : "Not Admitted"}
-      </p>
+      {#if !loading}
+        <p
+          in:fade={{ duration: 1500 }}
+          class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl blinkDiv {temp
+            ?.rows[0]?.[1]?.value == 'YES'
+            ? 'bg-yellow-500'
+            : 'bg-green-500'}"
+        >
+          {temp?.rows[0]?.[1]?.value == "YES" ? "Admitted" : "Not Admitted"}
+        </p>
+      {/if}
     </div>
     <div class="flex justify-end items-center">
       <div class="grid grid-rows-2 gap-5">
@@ -214,7 +218,7 @@
   >
     {#if loading}
       <div class="flex items-center justify-center">
-        <img src="../../../assets/loading2.svg" alt="Kiwi standing on oval" />
+        <img src={loading2} width="250px" alt="Loading for Data" />
       </div>
     {:else if temp?.rows.length >= 1}
       <sl-tab-group>
