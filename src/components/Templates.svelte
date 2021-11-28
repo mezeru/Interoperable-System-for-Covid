@@ -51,41 +51,43 @@
   };
 </script>
 
-{#if templates.length > 0}
-  <div>
-    <h3 class="text-5xl m-5 text-center font-bold text-blue-500">
-      Templates Posted
-    </h3>
+<div class="p-5">
+  {#if templates.length > 0}
+    <div>
+      <h3 class="text-5xl m-5 text-center font-bold text-blue-500">
+        Templates Posted
+      </h3>
+    </div>
+    <div class="flex flex-col p-5 m-2">
+      {#each templates as temp, i}
+        <div
+          class="grid grid-cols-5 text-center items-center rounded-lg shadow-lg border p-5 m-3 "
+        >
+          <p class="text-3xl font-bold">
+            {i + 1}
+          </p>
+          <p class="font-semibold">
+            {temp.template_id}
+          </p>
+          <p>
+            {temp.archetype_id}
+          </p>
+          <p>
+            {temp.concept}
+          </p>
+          <p>
+            {@html handleDate(temp.created_timestamp)}
+          </p>
+        </div>
+      {/each}
+    </div>
+  {:else}
+    <div>No Templates Posted</div>
+  {/if}
+  <div class="m-2 flex flex-row items-center justify-center">
+    <sl-button type="primary" class="mx-5" on:click={handleClick}
+      ><sl-icon name="file-earmark-plus-fill" slot="prefix" />Add</sl-button
+    >
+    <input type="file" class="mx-5" bind:files />
   </div>
-  <div class="flex flex-col p-5 m-2">
-    {#each templates as temp, i}
-      <div
-        class="grid grid-cols-5 text-center items-center rounded-lg shadow-lg border p-5 m-3 "
-      >
-        <p class="text-3xl font-bold">
-          {i + 1}
-        </p>
-        <p class="font-semibold">
-          {temp.template_id}
-        </p>
-        <p>
-          {temp.archetype_id}
-        </p>
-        <p>
-          {temp.concept}
-        </p>
-        <p>
-          {@html handleDate(temp.created_timestamp)}
-        </p>
-      </div>
-    {/each}
-  </div>
-{:else}
-  <div>No Templates Posted</div>
-{/if}
-<div class="m-2">
-  <sl-button type="primary" on:click={handleClick}
-    ><sl-icon name="file-earmark-plus-fill" slot="prefix" />Add</sl-button
-  >
-  <input type="file" bind:files />
 </div>
