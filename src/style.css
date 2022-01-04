@@ -12,6 +12,20 @@ h1,h2{
     animation: blink infinite 1000ms ease-in-out;
 }
 
+.menu{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10em;
+}
+
+.s-lX3rkpEI-BOf{
+    margin-bottom: 2em;
+}
+
+.ok{
+    background-color: red !important;
+}
+
 @keyframes blink{
     0%{
         text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.76);

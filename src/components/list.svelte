@@ -1,6 +1,7 @@
 <script>
   // @ts-nocheck
   import Fuse from "fuse.js";
+  import OptKit from 'optkit';
   import { useNavigate } from "svelte-navigator";
   const navigate = useNavigate();
   import { onMount } from "svelte";
@@ -13,7 +14,7 @@
   let patients = [];
   let loading = true;
   let fuseObj;
-
+  
   onMount(async () => {
     const resp = await mongo.get("all");
     patients = resp.data;
@@ -31,6 +32,7 @@
     loading = false;
   });
 
+
   const handleFilter = (value) => {
     if (value) {
       patients = fuseObj.search(value).map((x) => x.item);
@@ -45,15 +47,22 @@
   };
 
   const handleDelete = async (id) => {
-    loading = true;
-    patients = [];
+    let confirmed = await confirm("Confirm Delete Patient ?","Delete");
+    
+    if (confirmed){
+      loading = true;
+      patients = [];
     const resp = await mongo.delete(`/delete?AdhaarNo=${id}`);
     const r = await mongo.get("all");
     patients = r.data;
+    }
+    
+    
     loading = false;
   };
 </script>
 
+<OptKit/>
 <h2 class="font-sans text-6xl font-bold mb-14">Patients Registered</h2>
 <div class="flex items-center justify-center">
   <div>
@@ -96,7 +105,7 @@
             </p>
           </div>
           <div class="flex justify-center items-center">
-            <p class="text-gray-300 text-white font-bold text-xl">
+            <p class="text-gray-300 font-bold text-xl">
               {patient.Gender}
             </p>
           </div>
@@ -128,6 +137,7 @@
               on:click|preventDefault={() => handleDelete(patient.AdhaarNo)}
             >
               <sl-icon name="trash" slot="suffix" />
+          
             </sl-button>
           </div>
         </div>
