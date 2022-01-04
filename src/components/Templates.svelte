@@ -7,7 +7,7 @@
 
   onMount(async () => {
     const r = await openehr.get("/definition/template/adl1.4");
-    templates = r.data.reverse();
+    templates = r.data?.reverse();
   });
 
   const handleDate = (date) => {

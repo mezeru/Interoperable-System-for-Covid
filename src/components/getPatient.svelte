@@ -22,6 +22,8 @@
     "Opd_temp.v1": "postdata",
   };
 
+  
+
   let temp: { rows: { name: string }[]; columns: Record<string, string>[] } =
     null;
   let listComp = [];
@@ -33,10 +35,22 @@
   let time = [];
 
   let loading = true;
+  let navigation;
+  let tabs = {
+          vital: "clinical",
+          clinical: "travel",
+          travel: "lab",
+          lab: "assessment",
+          assessment: "conclusion",
+          conclusion: "compositions",
+          Compositions: null
+        }
 
   export let ehrId;
   export let id;
   export let name;
+
+  console.log(ehrId);
 
   let table = new Set([
     "Time",
@@ -221,7 +235,7 @@
         <img src={loading2} width="250px" alt="Loading for Data" />
       </div>
     {:else if temp?.rows.length >= 1}
-      <sl-tab-group>
+      <sl-tab-group bind:this={navigation}>
         <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
         <sl-tab slot="nav" panel="travel">Travel History</sl-tab>
@@ -563,6 +577,36 @@
           </div>
         </sl-tab-panel>
       </sl-tab-group>
+      <div class="w-full flex justify-between">
+
+        <sl-button
+            type="neutral"
+            on:click={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              let previous_tab = navigation.activeTab.previousElementSibling?.panel;
+              navigation.show(previous_tab);
+            }}
+          >
+            <sl-icon slot="prefix" name="arrow-left" />
+            Back
+          </sl-button>
+        
+
+    
+        <sl-button
+        type="neutral"
+        on:click={() => {
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 50);
+          let next_tab = tabs[navigation.activeTab.panel];
+          navigation.show(next_tab);
+        }}
+      >
+        <sl-icon slot="suffix" name="arrow-right" />
+        Next
+      </sl-button>
+      </div>
     {:else}
       <p
         class="text-6xl subpixel-antialiased text-center p-5 text-red-500 font-bold"
@@ -571,4 +615,5 @@
       </p>
     {/if}
   </div>
+  
 </div>

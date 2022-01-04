@@ -7,7 +7,12 @@
   export let ehrId;
   export let compId = null;
   let form;
-  let loading;
+  let loading = false;
+  let navigation;
+  let tabs = {
+    assess: "Conclu",
+    Conclu: null
+  }
 
   let navigo = useNavigate();
 
@@ -26,7 +31,7 @@
 
   const templateId = "assessment.form";
   const handleSubmit = (e) => {
-    loading = "loading";
+    loading = true;
     console.log(e.detail);
     ehrscape
       .post("/composition", e.detail, {
@@ -40,7 +45,7 @@
       .catch((err) => {
         alert(err);
       });
-    loading = "";
+    loading = false;
   };
 </script>
 
@@ -52,7 +57,7 @@
   ref="formRef"
   on:mb-submit={handleSubmit}
 >
-  <sl-tab-group>
+  <sl-tab-group bind:this={navigation}>
     <sl-tab slot="nav" panel="assess">Assessment</sl-tab>
     <sl-tab slot="nav" panel="Conclu">Conclusions</sl-tab>
 
@@ -187,7 +192,36 @@
     <mb-context path="assessment.form/territory" />
     <mb-context path="assessment.form/language" />
   </sl-tab-group>
-  <mb-submit>
-    <sl-button type="neutral" {loading}>Submit</sl-button>
-  </mb-submit>
+  <div class="w-full flex justify-between">
+    <sl-button
+        type="neutral"
+        on:click={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          let previous_tab = navigation.activeTab.previousElementSibling?.panel;
+          navigation.show(previous_tab);
+        }}
+      >
+        <sl-icon slot="prefix" name="arrow-left" />
+        Back
+      </sl-button>
+    
+      <mb-submit>
+        <sl-button type="primary" size="large" {loading}>Submit</sl-button>
+      </mb-submit>
+
+    <sl-button
+    type="neutral"
+    on:click={() => {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 50);
+      let next_tab = tabs[navigation.activeTab.panel];
+      navigation.show(next_tab);
+    }}
+  >
+    <sl-icon slot="suffix" name="arrow-right" />
+    Next
+  </sl-button>
+  </div>
+  
 </mb-form>
