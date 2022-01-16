@@ -32,8 +32,29 @@
   const templateId = "Opd_temp.v1";
   const handleSubmit = (e) => {
     loading = true;
-    console.log(e.detail);
-    ehrscape
+
+    if(compId !== "None"){
+
+      ehrscape
+      .put(`/composition/${compId}`, e.detail, {
+        params: { format: "FLAT", templateId, ehrId },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(navigo(-1));
+        }
+      })
+      .catch((err) => {
+        loading = false;
+        alert(err);
+        
+      });
+
+
+    }
+    else{
+
+      ehrscape
       .post("/composition", e.detail, {
         params: { format: "FLAT", templateId, ehrId },
       })
@@ -47,6 +68,8 @@
         alert(err);
         
       });
+
+    }    
     
   };
 </script>
