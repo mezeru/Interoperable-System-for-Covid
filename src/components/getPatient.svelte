@@ -47,8 +47,8 @@
         }
 
   export let ehrId;
-  export let id;
-  export let name;
+  let id;
+  let name;
 
   console.log(ehrId);
 
@@ -73,6 +73,11 @@
   };
 
   onMount(async () => {
+
+    const patientDemo = await mongo.get(`search?ehrId=${ehrId}`)
+    name = patientDemo.data.Name
+    id = patientDemo.data.AdhaarNo
+
     let list;
     temp = await Vitals(ehrId);
     time = temp.rows?.map((x) => x[0]?.value).filter(e => e);
@@ -177,11 +182,16 @@
     return row.value;
   };
 </script>
-
+{#if loading}
+      <div class="flex items-center justify-center h-fit" style="height: 80vh">
+        <img src={loading2} width="250px" alt="Loading for Data" />
+      </div>
+{:else}
 <div
   in:fly={{ y: 200, duration: 500 }}
   class="m-5 bg-white rounded-lg shadow-lg"
 >
+
   <div
     class="grid grid-cols-3 gap-3 p-5 shadow-lg rounded-t-lg border bg-gray-700 justify-between"
   >
@@ -191,7 +201,7 @@
     </div>
 
     <div class="flex justify-center items-center">
-      {#if !loading}
+      
         <p
           in:fade={{ duration: 1500 }}
           class="px-10 py-2 text-white font-bold rounded text-center uppercase text-3xl blinkDiv {temp
@@ -201,7 +211,7 @@
         >
           {temp?.rows[0]?.[1]?.value == "YES" ? "Admitted" : "Not Admitted"}
         </p>
-      {/if}
+      
     </div>
     <div class="flex justify-end items-center">
       <div class="grid grid-rows-2 gap-5">
@@ -232,11 +242,8 @@
       duration: 2500,
     }}
   >
-    {#if loading}
-      <div class="flex items-center justify-center">
-        <img src={loading2} width="250px" alt="Loading for Data" />
-      </div>
-    {:else if time.length > 0}
+    
+    {#if time.length > 0}
       <sl-tab-group bind:this={navigation}>
         <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
@@ -618,4 +625,9 @@
     {/if}
   </div>
   
+
+
+
+
 </div>
+{/if}

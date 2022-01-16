@@ -43,7 +43,7 @@
   };
 
   const handleClick = (Aadhaar, ehrId, name) => {
-    navigate(`/patient/${Aadhaar}/${ehrId}/${name}`);
+    navigate(`/patient/${ehrId}`);
   };
 
   const handleDelete = async (id) => {
