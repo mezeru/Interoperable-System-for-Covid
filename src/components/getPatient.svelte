@@ -75,7 +75,9 @@
   onMount(async () => {
     let list;
     temp = await Vitals(ehrId);
-    time = temp.rows?.map((x) => x[0].value);
+    time = temp.rows?.map((x) => x[0]?.value).filter(e => e);
+    
+    console.log(time.length)
 
     list = await compositionsList(ehrId);
     listComp = list.rows;
@@ -234,7 +236,7 @@
       <div class="flex items-center justify-center">
         <img src={loading2} width="250px" alt="Loading for Data" />
       </div>
-    {:else if temp?.rows.length >= 1}
+    {:else if time.length > 0}
       <sl-tab-group bind:this={navigation}>
         <sl-tab slot="nav" panel="vital">Vital Signs</sl-tab>
         <sl-tab slot="nav" panel="clinical">Clinical Data</sl-tab>
